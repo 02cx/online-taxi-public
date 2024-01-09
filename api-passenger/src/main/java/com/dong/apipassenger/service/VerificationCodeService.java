@@ -4,6 +4,7 @@ import com.dong.apipassenger.remote.ServiceVerificationcodeClient;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.dto.ResponseResult;
 import com.dong.internalcommon.response.NumberCodeResponse;
+import com.dong.internalcommon.response.TokenResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -72,7 +73,9 @@ public class VerificationCodeService {
         // 颁发token
 
         // 响应
-        return ResponseResult.success("");
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setToken("token value");
+        return ResponseResult.success(tokenResponse);
     }
 
 

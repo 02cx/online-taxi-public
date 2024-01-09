@@ -1,6 +1,6 @@
 package com.dong.apipassenger.controller;
 
-import com.dong.apipassenger.request.VerificationCodeDTO;
+import com.dong.internalcommon.request.VerificationCodeDTO;
 import com.dong.apipassenger.service.VerificationCodeService;
 import com.dong.internalcommon.dto.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;

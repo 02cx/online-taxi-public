@@ -1,4 +1,4 @@
-package com.dong.apipassenger.request;
+package com.dong.internalcommon.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
