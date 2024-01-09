@@ -1,21 +1,15 @@
 package com.dong.apipassenger.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class VerificationCodeDTO {
 
     private String passengerPhone;
 
-    public String getPassengerPhone() {
-        return passengerPhone;
-    }
-
-    public void setPassengerPhone(String passengerPhone) {
-        this.passengerPhone = passengerPhone;
-    }
-
-    public VerificationCodeDTO(String passengerPhone) {
-        this.passengerPhone = passengerPhone;
-    }
-
-    public VerificationCodeDTO() {
-    }
+    private String verificationCode;
 }

@@ -24,6 +24,17 @@ public class ResponseResult<T> {
     }
 
     /**
+     *  成功响应的方法
+     */
+    public static <T> ResponseResult success(Integer code,String message){
+        return new ResponseResult().setCode(code).setMessage(message);
+    }
+
+    public static <T> ResponseResult success(){
+        return new ResponseResult().setCode(CommonStatusEnum.SUCCESS.getCode()).setMessage(CommonStatusEnum.SUCCESS.getMessage());
+    }
+
+    /**
      *  失败：统一的失败
      * @param data
      * @return
