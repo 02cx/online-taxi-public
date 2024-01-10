@@ -10,6 +10,11 @@ public enum CommonStatusEnum {
      */
     VERIFICATION_CODE_ERROR(1099,"验证码错误"),
     /**
+     * token类提示：1100~1199
+     */
+    TOKEN_ERROR(1199,"token错误"),
+
+    /**
      * 验证码已过期
      */
     VERIFICATION_CODE_EXPIRED(1098,"验证码已过期"),

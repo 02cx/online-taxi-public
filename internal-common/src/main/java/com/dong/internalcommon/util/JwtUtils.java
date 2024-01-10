@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.constant.TokenConstant;
 import com.dong.internalcommon.dto.TokenResult;
+import com.dong.internalcommon.response.TokenResponse;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +25,8 @@ public class JwtUtils {
     private static final String JWT_KEY_IDENTITY = "identity";
     // token类型
     private static final String JWT_KEY_TOKEN_TYPE = "token_type";
+    // 时间戳
+    private static final String TOKEN_TIME = "tokenTime";
 
 
     // 生成token
@@ -32,11 +35,7 @@ public class JwtUtils {
         map.put(JWT_KEY_PHONE,passengerPhone);
         map.put(JWT_KEY_IDENTITY,identity);
         map.put(JWT_KEY_TOKEN_TYPE,tokenType);
-
-        // token过期时间
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE,1);
-        Date date = calendar.getTime();
+        map.put(TOKEN_TIME,Calendar.getInstance().getTime().toString());
 
         JWTCreator.Builder builder = JWT.create();
 
@@ -44,7 +43,7 @@ public class JwtUtils {
             builder.withClaim(k,v);
         });
         // 整合过期时间
-        builder.withExpiresAt(date);
+        //builder.withExpiresAt(date);
         // 生成token
         String token = builder.sign(Algorithm.HMAC256(SIGN));
 
@@ -59,6 +58,17 @@ public class JwtUtils {
         String tokenType = verify.getClaim(JWT_KEY_TOKEN_TYPE).asString();
 
         TokenResult tokenResult = TokenResult.builder().phone(phone).identity(identity).tokenType(tokenType).build();
+        return tokenResult;
+    }
+
+    // 校验token
+    public static TokenResult checkToken(String token){
+        TokenResult tokenResult = null;
+        try{
+            tokenResult = JwtUtils.parseToken(token);
+        }catch (Exception exception){
+
+        }
         return tokenResult;
     }
 
