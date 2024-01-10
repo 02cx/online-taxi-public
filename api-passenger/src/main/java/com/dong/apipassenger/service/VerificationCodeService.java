@@ -1,8 +1,10 @@
 package com.dong.apipassenger.service;
 
+import com.dong.apipassenger.remote.ServicePassengerUserClient;
 import com.dong.apipassenger.remote.ServiceVerificationcodeClient;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.dto.ResponseResult;
+import com.dong.internalcommon.request.VerificationCodeDTO;
 import com.dong.internalcommon.response.NumberCodeResponse;
 import com.dong.internalcommon.response.TokenResponse;
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +21,8 @@ public class VerificationCodeService {
 
     @Autowired
     private ServiceVerificationcodeClient serviceVerificationcodeClient;
+    @Autowired
+    private ServicePassengerUserClient servicePassengerUserClient;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
@@ -69,7 +73,10 @@ public class VerificationCodeService {
         }
 
         // 判断之前是否有用户，进行对应的操作
+        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
 
+        servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         // 颁发token
 
         // 响应
