@@ -15,7 +15,7 @@ import java.util.Map;
 public class JwtUtils {
 
     // 盐
-    private static final String SIGNEL = "wuyadong";
+    private static final String SIGN = "wuyadong";
 
     private static final String JWT_KEY_PHONE = "phone";
     // 先假定乘客是1 司机是2
@@ -41,14 +41,14 @@ public class JwtUtils {
         // 整合过期时间
         builder.withExpiresAt(date);
         // 生成token
-        String token = builder.sign(Algorithm.HMAC256(SIGNEL));
+        String token = builder.sign(Algorithm.HMAC256(SIGN));
 
         return token;
     }
 
     // 解析token
     public static TokenResult parseToken(String token){
-        DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGNEL)).build().verify(token);
+        DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
         String phone = verify.getClaim(JWT_KEY_PHONE).toString();
         String identity = verify.getClaim(JWT_KEY_IDENTITY).toString();
 
