@@ -3,10 +3,12 @@ package com.dong.apipassenger.service;
 import com.dong.apipassenger.remote.ServicePassengerUserClient;
 import com.dong.apipassenger.remote.ServiceVerificationcodeClient;
 import com.dong.internalcommon.constant.CommonStatusEnum;
+import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.dto.ResponseResult;
 import com.dong.internalcommon.request.VerificationCodeDTO;
 import com.dong.internalcommon.response.NumberCodeResponse;
 import com.dong.internalcommon.response.TokenResponse;
+import com.dong.internalcommon.util.JwtUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -78,6 +80,7 @@ public class VerificationCodeService {
 
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         // 颁发token
+        String token = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
 
         // 响应
         TokenResponse tokenResponse = new TokenResponse();
