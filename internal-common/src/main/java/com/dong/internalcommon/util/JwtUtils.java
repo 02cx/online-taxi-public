@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dong.internalcommon.constant.IdentityConstant;
+import com.dong.internalcommon.constant.TokenConstant;
 import com.dong.internalcommon.dto.TokenResult;
 
 import java.util.Calendar;
@@ -21,13 +22,16 @@ public class JwtUtils {
     private static final String JWT_KEY_PHONE = "phone";
     // 先假定乘客是1 司机是2
     private static final String JWT_KEY_IDENTITY = "identity";
+    // token类型
+    private static final String JWT_KEY_TOKEN_TYPE = "token_type";
 
 
     // 生成token
-    public static String generatorToken(String passengerPhone,String identity){
+    public static String generatorToken(String passengerPhone,String identity,String tokenType){
         Map<String,String> map = new HashMap<>();
         map.put(JWT_KEY_PHONE,passengerPhone);
         map.put(JWT_KEY_IDENTITY,identity);
+        map.put(JWT_KEY_TOKEN_TYPE,tokenType);
 
         // token过期时间
         Calendar calendar = Calendar.getInstance();
@@ -50,16 +54,17 @@ public class JwtUtils {
     // 解析token
     public static TokenResult parseToken(String token){
         DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
-        String phone = verify.getClaim(JWT_KEY_PHONE).toString();
-        String identity = verify.getClaim(JWT_KEY_IDENTITY).toString();
+        String phone = verify.getClaim(JWT_KEY_PHONE).asString();
+        String identity = verify.getClaim(JWT_KEY_IDENTITY).asString();
+        String tokenType = verify.getClaim(JWT_KEY_TOKEN_TYPE).asString();
 
-        TokenResult tokenResult = TokenResult.builder().phone(phone).identity(identity).build();
+        TokenResult tokenResult = TokenResult.builder().phone(phone).identity(identity).tokenType(tokenType).build();
         return tokenResult;
     }
 
 
     public static void main(String[] args) {
-        String token = generatorToken("19882012313", IdentityConstant.PASSENGER_IDENTITY);
+        String token = generatorToken("19882012313", IdentityConstant.PASSENGER_IDENTITY, TokenConstant.ACCESS_TOKEN_TYPE);
         System.out.println("生成token：" + token);
         TokenResult tokenResult = parseToken(token);
         System.out.println("解析token：" + tokenResult.toString());
