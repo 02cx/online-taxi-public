@@ -4,8 +4,8 @@ import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.dong.internalcommon.dto.ResponseResult;
-import com.dong.internalcommon.dto.TokenResult;
 import com.dong.internalcommon.util.JwtUtils;
+
 import net.sf.json.JSONObject;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -40,7 +40,7 @@ public class JwtIntercepter implements HandlerInterceptor {
 
         if(!result){
             PrintWriter pw = response.getWriter();
-            pw.print(JSONObject.fromObject(ResponseResult.fail(resultString).toString()));
+            pw.print(JSONObject.fromObject(ResponseResult.fail(resultString)).toString());
         }
 
         return result;

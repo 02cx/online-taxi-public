@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class VerificationCodeService {
 
     private String verificationCodePrefix = "passenger_verification_code_";
+    private String tokenPrefix = "token_";
 
     @Autowired
     private ServiceVerificationcodeClient serviceVerificationcodeClient;
@@ -56,6 +57,15 @@ public class VerificationCodeService {
     }
 
     /**
+     * 生成token对应的redis key
+     * @param passengerPhone
+     * @return
+     */
+    public String generatorKeyByToken(String passengerPhone,String identity){
+        return tokenPrefix + passengerPhone + "-"  +identity;
+    }
+
+    /**
      *  校验验证码
      * @param passengerPhone 乘客手机号
      * @param verificationCode  验证码
@@ -81,6 +91,10 @@ public class VerificationCodeService {
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         // 颁发token
         String token = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
+
+        // 将redis存储在redis
+        String tokenKey = generatorKeyByToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
+        stringRedisTemplate.opsForValue().set(tokenKey,token,30,TimeUnit.DAYS);
 
         // 响应
         TokenResponse tokenResponse = new TokenResponse();

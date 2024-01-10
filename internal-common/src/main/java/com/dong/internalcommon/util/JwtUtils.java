@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.dto.TokenResult;
 
 import java.util.Calendar;
@@ -54,6 +55,14 @@ public class JwtUtils {
 
         TokenResult tokenResult = TokenResult.builder().phone(phone).identity(identity).build();
         return tokenResult;
+    }
+
+
+    public static void main(String[] args) {
+        String token = generatorToken("19882012313", IdentityConstant.PASSENGER_IDENTITY);
+        System.out.println("生成token：" + token);
+        TokenResult tokenResult = parseToken(token);
+        System.out.println("解析token：" + tokenResult.toString());
     }
 
 }
