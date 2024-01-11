@@ -20,7 +20,7 @@ public class DirectionService {
      * @param destLatitude
      * @return
      */
-    public ResponseResult driving(String depLongitude,String depLatitude,String destLongitude,String destLatitude){
+    public ResponseResult<DirectionResponse> driving(String depLongitude,String depLatitude,String destLongitude,String destLatitude){
         // 调用高德开放平台获取距离和时间
         DirectionResponse directionResponse = mapDirectionClient.direction(depLongitude, depLatitude, destLongitude, destLatitude);
         return ResponseResult.success(directionResponse);

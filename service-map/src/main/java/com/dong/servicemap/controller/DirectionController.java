@@ -1,6 +1,7 @@
 package com.dong.servicemap.controller;
 
 import com.dong.internalcommon.request.ForecastPriceDTO;
+import com.dong.internalcommon.response.DirectionResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.servicemap.service.DirectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class DirectionController {
     private DirectionService directionService;
 
     @GetMapping("/driving")
-    public ResponseResult Driving(@RequestBody ForecastPriceDTO forecastPriceDTO){
+    public ResponseResult<DirectionResponse> driving(@RequestBody ForecastPriceDTO forecastPriceDTO){
         String depLongitude = forecastPriceDTO.getDepLongitude();
         String depLatitude = forecastPriceDTO.getDepLatitude();
         String destLongitude = forecastPriceDTO.getDestLongitude();
