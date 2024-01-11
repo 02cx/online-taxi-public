@@ -52,6 +52,11 @@ public class PassengerUser implements Serializable {
      */
     private LocalDateTime gmtModified;
 
+    /**
+     *
+     */
+    private String profilePhoto;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

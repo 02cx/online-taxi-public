@@ -63,4 +63,13 @@ public class ResponseResult<T> {
     public static <T>ResponseResult fail(int code,String message,T data){
         return new ResponseResult().setCode(code).setMessage(message).setData(data);
     }
+
+    /**
+     *  失败：枚举类信息
+     * @param commonStatusEnum
+     * @return
+     */
+    public static ResponseResult fail(CommonStatusEnum commonStatusEnum){
+        return new ResponseResult().setCode(commonStatusEnum.getCode()).setMessage(commonStatusEnum.getMessage());
+    }
 }
