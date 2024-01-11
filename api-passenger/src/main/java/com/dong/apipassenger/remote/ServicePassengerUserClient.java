@@ -1,6 +1,6 @@
 package com.dong.apipassenger.remote;
 
-import com.dong.internalcommon.dto.ResponseResult;
+import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.request.VerificationCodeDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

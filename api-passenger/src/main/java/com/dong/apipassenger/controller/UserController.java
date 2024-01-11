@@ -1,7 +1,7 @@
 package com.dong.apipassenger.controller;
 
 import com.dong.apipassenger.service.UserService;
-import com.dong.internalcommon.dto.ResponseResult;
+import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

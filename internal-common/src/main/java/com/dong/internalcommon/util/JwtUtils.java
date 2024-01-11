@@ -3,15 +3,12 @@ package com.dong.internalcommon.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.constant.TokenConstant;
-import com.dong.internalcommon.dto.TokenResult;
-import com.dong.internalcommon.response.TokenResponse;
+import com.dong.internalcommon.result.TokenResult;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

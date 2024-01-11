@@ -1,8 +1,7 @@
 package com.dong.serviceverificationcode.controller;
 
-import com.dong.internalcommon.dto.ResponseResult;
+import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.response.NumberCodeResponse;
-import net.sf.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;

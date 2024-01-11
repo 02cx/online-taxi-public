@@ -1,4 +1,4 @@
-package com.dong.internalcommon.dto;
+package com.dong.internalcommon.result;
 
 import lombok.Builder;
 import lombok.Data;

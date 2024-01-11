@@ -2,8 +2,8 @@ package com.dong.apipassenger.service;
 
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.constant.TokenConstant;
-import com.dong.internalcommon.dto.ResponseResult;
-import com.dong.internalcommon.dto.TokenResult;
+import com.dong.internalcommon.result.ResponseResult;
+import com.dong.internalcommon.result.TokenResult;
 import com.dong.internalcommon.response.TokenResponse;
 import com.dong.internalcommon.util.JwtUtils;
 import com.dong.internalcommon.util.RedisPrefixUtils;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 @Service

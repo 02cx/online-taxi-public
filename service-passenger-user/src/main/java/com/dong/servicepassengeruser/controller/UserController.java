@@ -1,6 +1,6 @@
 package com.dong.servicepassengeruser.controller;
 
-import com.dong.internalcommon.dto.ResponseResult;
+import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.request.VerificationCodeDTO;
 import com.dong.servicepassengeruser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

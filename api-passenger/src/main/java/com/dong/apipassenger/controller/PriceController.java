@@ -1,21 +1,21 @@
 package com.dong.apipassenger.controller;
 
-import com.dong.apipassenger.service.TokenService;
+import com.dong.apipassenger.service.PriceService;
+import com.dong.internalcommon.request.ForecastPriceDTO;
 import com.dong.internalcommon.result.ResponseResult;
-import com.dong.internalcommon.response.TokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TokenController {
+public class PriceController {
 
     @Autowired
-    private TokenService tokenService;
+    private PriceService priceService;
 
-    @PostMapping("/token-refresh")
-    public ResponseResult refreshToken(@RequestBody TokenResponse tokenResponseSrc){
-        return tokenService.refreshToken(tokenResponseSrc);
+    @PostMapping("/forecast-price")
+    public ResponseResult forecastPrice(@RequestBody ForecastPriceDTO forecastPriceDTO){
+        return priceService.forecasePrice(forecastPriceDTO);
     }
 }

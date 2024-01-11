@@ -1,8 +1,8 @@
 package com.dong.apipassenger.service;
 
 import com.dong.apipassenger.remote.ServicePassengerUserClient;
-import com.dong.internalcommon.dto.ResponseResult;
-import com.dong.internalcommon.dto.TokenResult;
+import com.dong.internalcommon.result.ResponseResult;
+import com.dong.internalcommon.result.TokenResult;
 import com.dong.internalcommon.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,7 @@ import com.dong.apipassenger.remote.ServiceVerificationcodeClient;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.constant.TokenConstant;
-import com.dong.internalcommon.dto.ResponseResult;
+import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.request.VerificationCodeDTO;
 import com.dong.internalcommon.response.NumberCodeResponse;
 import com.dong.internalcommon.response.TokenResponse;

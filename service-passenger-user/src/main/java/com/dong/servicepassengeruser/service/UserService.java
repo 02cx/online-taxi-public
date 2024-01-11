@@ -1,7 +1,7 @@
 package com.dong.servicepassengeruser.service;
 
 import com.dong.internalcommon.constant.CommonStatusEnum;
-import com.dong.internalcommon.dto.ResponseResult;
+import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.vo.UserInfoVO;
 import com.dong.servicepassengeruser.domain.PassengerUser;
 import com.dong.servicepassengeruser.mapper.PassengerUserMapper;

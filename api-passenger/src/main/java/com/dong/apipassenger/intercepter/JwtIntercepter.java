@@ -1,11 +1,8 @@
 package com.dong.apipassenger.intercepter;
 
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.dong.internalcommon.constant.TokenConstant;
-import com.dong.internalcommon.dto.ResponseResult;
-import com.dong.internalcommon.dto.TokenResult;
+import com.dong.internalcommon.result.ResponseResult;
+import com.dong.internalcommon.result.TokenResult;
 import com.dong.internalcommon.util.JwtUtils;
 
 import com.dong.internalcommon.util.RedisPrefixUtils;
