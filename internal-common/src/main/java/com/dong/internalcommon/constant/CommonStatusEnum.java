@@ -17,6 +17,14 @@ public enum CommonStatusEnum {
      * 用户提示信息：1200~1299
      */
     USER_NOT_EXISTS(1200,"用户不存在"),
+    /**
+     * 计价规则信息：1300~1399
+     */
+    PRICE_RULE_NOT_EXISTS(1300,"计价规则不存在"),
+    /**
+     *  行政区域信息：1400~1499
+     */
+    QUERY_DISTRICT_ERROR(1400,"查询行政区域错误"),
 
     /**
      * 验证码已过期

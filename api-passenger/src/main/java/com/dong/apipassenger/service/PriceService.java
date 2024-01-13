@@ -15,9 +15,8 @@ public class PriceService {
 
     public ResponseResult forecasePrice(ForecastPriceDTO forecastPriceDTO){
 
-        servicePriceClient.forecastPrice(forecastPriceDTO);
+        ResponseResult responseResult = servicePriceClient.forecastPrice(forecastPriceDTO);
 
-        log.info(forecastPriceDTO.toString());
-        return ResponseResult.success();
+        return responseResult;
     }
 }

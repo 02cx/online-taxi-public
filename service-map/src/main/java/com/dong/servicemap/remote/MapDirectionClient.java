@@ -68,10 +68,10 @@ public class MapDirectionClient {
 
 
                     if(jsonObject.has(AmapConfigConstant.DISTANCE)){
-                        directionResponse.setDistance(jsonObject.getString(AmapConfigConstant.DISTANCE));
+                        directionResponse.setDistance(jsonObject.getInt(AmapConfigConstant.DISTANCE));
                     }
                     if(jsonObject.has(AmapConfigConstant.DURATION)){
-                        directionResponse.setDuration(jsonObject.getString(AmapConfigConstant.DURATION));
+                        directionResponse.setDuration(jsonObject.getInt(AmapConfigConstant.DURATION));
                     }
 
                 }
