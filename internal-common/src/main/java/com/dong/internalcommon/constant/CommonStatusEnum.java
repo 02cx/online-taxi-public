@@ -25,6 +25,15 @@ public enum CommonStatusEnum {
      *  行政区域信息：1400~1499
      */
     QUERY_DISTRICT_ERROR(1400,"查询行政区域错误"),
+    /**
+     * 司机——车辆关系信息：1500~1500
+     */
+    DRIVER_CAR_BINGDING(1500,"司机和车辆已绑定"),
+
+    CAR_BINDING(1501,"车辆已被绑定"),
+
+    DRIVER_BINDING(1502,"司机已被绑定"),
+
 
     /**
      * 验证码已过期

@@ -11,6 +11,7 @@ public class DriverUserHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject,"gmtCreate", LocalDateTime.class,LocalDateTime.now());
+        this.strictUpdateFill(metaObject,"gmtModified", LocalDateTime.class,LocalDateTime.now());
     }
 
     @Override
