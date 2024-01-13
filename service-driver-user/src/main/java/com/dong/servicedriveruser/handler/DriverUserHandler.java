@@ -10,12 +10,11 @@ import java.time.LocalDateTime;
 public class DriverUserHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        setFieldValByName("gmtCreate", LocalDateTime.now(),metaObject);
-        setFieldValByName("gmtModified", LocalDateTime.now(),metaObject);
+        this.strictInsertFill(metaObject,"gmtCreate", LocalDateTime.class,LocalDateTime.now());
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        setFieldValByName("gmtModified", LocalDateTime.now(),metaObject);
+        this.strictUpdateFill(metaObject,"gmtModified", LocalDateTime.class,LocalDateTime.now());
     }
 }
