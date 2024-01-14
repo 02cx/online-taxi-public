@@ -1,6 +1,7 @@
 package com.dong.apiboss.service;
 
 import com.dong.apiboss.remote.ServiceDriverUserClient;
+import com.dong.internalcommon.request.CarDTO;
 import com.dong.internalcommon.request.DriverUserDTO;
 import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,4 +30,5 @@ public class DriverUserService {
     public ResponseResult modifyDriverUser(DriverUserDTO driverUserDTO){
         return serviceDriverUserClient.updateUser(driverUserDTO);
     }
+
 }

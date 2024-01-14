@@ -1,5 +1,7 @@
 package com.dong.apiboss.remote;
 
+import com.dong.internalcommon.request.CarDTO;
+import com.dong.internalcommon.request.DriverCarBindingDTO;
 import com.dong.internalcommon.request.DriverUserDTO;
 import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,4 +17,15 @@ public interface ServiceDriverUserClient {
 
     @PutMapping("/update-user")
     public ResponseResult updateUser(@RequestBody DriverUserDTO driverUserDTO);
+
+    @PostMapping("/car")
+    public ResponseResult car(@RequestBody CarDTO carDTO);
+
+
+    @PostMapping("/driver-car-binding-relation")
+    public ResponseResult driverCarBindingRelation(@RequestBody DriverCarBindingDTO driverCarBindingDTO);
+
+    @PostMapping("/driver-car-unbinding-relation")
+    public ResponseResult driverCarUnbindingRelation(@RequestBody DriverCarBindingDTO driverCarBindingDTO);
+
 }
