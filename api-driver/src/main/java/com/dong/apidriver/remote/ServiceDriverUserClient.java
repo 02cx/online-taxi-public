@@ -1,11 +1,11 @@
 package com.dong.apidriver.remote;
 
 import com.dong.internalcommon.request.DriverUserDTO;
+import com.dong.internalcommon.request.VerificationCodeDTO;
+import com.dong.internalcommon.response.CheckDriverUserResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient("service-driver-user")
 public interface ServiceDriverUserClient {
@@ -15,5 +15,8 @@ public interface ServiceDriverUserClient {
 
     @PutMapping("/update-user")
     public ResponseResult updateUser(@RequestBody DriverUserDTO driverUserDTO);
+
+    @GetMapping("/check-driver")
+    public ResponseResult<CheckDriverUserResponse> checkDriver(@RequestBody VerificationCodeDTO verificationCodeDTO);
 }
 

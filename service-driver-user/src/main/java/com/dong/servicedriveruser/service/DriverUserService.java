@@ -1,5 +1,8 @@
 package com.dong.servicedriveruser.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.dong.internalcommon.constant.CommonStatusEnum;
+import com.dong.internalcommon.constant.DriverCarConstant;
 import com.dong.internalcommon.request.DriverUserDTO;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.servicedriveruser.domain.DriverUser;
@@ -7,6 +10,7 @@ import com.dong.servicedriveruser.mapper.DriverUserMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 public class DriverUserService {
@@ -36,4 +40,22 @@ public class DriverUserService {
         driverUserMapper.updateById(driverUser);
         return ResponseResult.success();
     }
+
+    /**
+     *  根据司机手机号查询司机信息是否可用
+     * @param driverPhone
+     * @return
+     */
+    public ResponseResult checkDriver(String driverPhone){
+        LambdaQueryWrapper<DriverUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(DriverUser::getDriverPhone,driverPhone);
+        wrapper.eq(DriverUser::getState,DriverCarConstant.DRIVER_STATE_VALID);
+        DriverUser driverUser = driverUserMapper.selectOne(wrapper);
+        if(ObjectUtils.isEmpty(driverUser)){
+            return ResponseResult.fail(CommonStatusEnum.DRIVER_USER_NOT_EXISTS);
+        }
+
+        return ResponseResult.success(driverUser);
+    }
+
 }
