@@ -34,6 +34,9 @@ public enum CommonStatusEnum {
 
     DRIVER_BINDING(1502,"司机已被绑定"),
 
+    DRIVER_CAR_BIND_NOT_EXISTS(1503,"司机车辆绑定关系不存在"),
+
+    DRIVER_CAR_UNBINDING(1504,"司机车辆已处于解绑状态"),
 
     /**
      * 验证码已过期

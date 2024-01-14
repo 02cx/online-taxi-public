@@ -20,4 +20,8 @@ public class DriverCarBindingController {
         return driverCarBindingService.driverCarBinding(driverCarBindingDTO);
     }
 
+    @PostMapping("/driver-car-unbinding-relation")
+    public ResponseResult driverCarUnbindingRelation(@RequestBody DriverCarBindingDTO driverCarBindingDTO){
+        return driverCarBindingService.driverCarUnbinding(driverCarBindingDTO);
+    }
 }

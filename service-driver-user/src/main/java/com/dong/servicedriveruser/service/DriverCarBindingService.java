@@ -22,6 +22,11 @@ public class DriverCarBindingService {
     private DriverCarBindingRelationshipMapper driverCarBindingRelationshipMapper;
 
 
+    /**
+     *  司机 车辆绑定
+     * @param driverCarBindingDTO
+     * @return
+     */
     public ResponseResult driverCarBinding(DriverCarBindingDTO driverCarBindingDTO){
         // 司机_车辆_1  已绑定
         LambdaQueryWrapper<DriverCarBindingRelationship> wrapper = new LambdaQueryWrapper<>();
@@ -49,12 +54,38 @@ public class DriverCarBindingService {
             return ResponseResult.fail(CommonStatusEnum.DRIVER_BINDING);
         }
 
+        driverCarBindingRelationship = new DriverCarBindingRelationship();
         driverCarBindingRelationship.setDriverId(driverCarBindingDTO.getDriverId());
         driverCarBindingRelationship.setCarId(driverCarBindingDTO.getCarId());
         driverCarBindingRelationship.setBindState(DriverCarConstant.BINDING);
         driverCarBindingRelationship.setBindingTime(LocalDateTime.now());
 
         driverCarBindingRelationshipMapper.insert(driverCarBindingRelationship);
+
+        return ResponseResult.success();
+    }
+
+
+    /**
+     *  司机车辆解绑
+     * @param driverCarBindingDTO
+     * @return
+     */
+    public ResponseResult driverCarUnbinding(DriverCarBindingDTO driverCarBindingDTO){
+        LambdaQueryWrapper<DriverCarBindingRelationship> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(DriverCarBindingRelationship::getCarId,driverCarBindingDTO.getCarId());
+        wrapper.eq(DriverCarBindingRelationship::getDriverId,driverCarBindingDTO.getDriverId());
+        DriverCarBindingRelationship driverCarBindingRelationship = driverCarBindingRelationshipMapper.selectOne(wrapper);
+        if(ObjectUtils.isEmpty(driverCarBindingRelationship)){
+            return ResponseResult.fail(CommonStatusEnum.DRIVER_CAR_BIND_NOT_EXISTS);
+        }
+        if(driverCarBindingRelationship.getBindState() == DriverCarConstant.NO_BINDING){
+            return ResponseResult.fail(CommonStatusEnum.DRIVER_CAR_UNBINDING);
+        }
+
+        driverCarBindingRelationship.setBindState(DriverCarConstant.NO_BINDING);
+        driverCarBindingRelationship.setUnBindingTime(LocalDateTime.now());
+        driverCarBindingRelationshipMapper.updateById(driverCarBindingRelationship);
 
         return ResponseResult.success();
     }
