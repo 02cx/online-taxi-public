@@ -17,4 +17,9 @@ public class VerificationCodeController {
         return verificationCodeService.sendVerificationCode(verificationCodeDTO);
     }
 
+    @PostMapping("/check-code")
+    public ResponseResult checkCode(@RequestBody VerificationCodeDTO verificationCodeDTO){
+        return verificationCodeService.checkCode(verificationCodeDTO.getDriverPhone(),verificationCodeDTO.getVerificationCode());
+    }
+
 }
