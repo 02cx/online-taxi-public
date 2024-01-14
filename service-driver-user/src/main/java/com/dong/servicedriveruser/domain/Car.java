@@ -188,8 +188,8 @@ public class Car implements Serializable {
 
     /**
      * 创建时间
-     */@TableField(fill = FieldFill.INSERT)
-
+     */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
     /**

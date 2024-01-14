@@ -6,7 +6,9 @@ import com.dong.internalcommon.constant.DriverCarConstant;
 import com.dong.internalcommon.request.DriverUserDTO;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.servicedriveruser.domain.DriverUser;
+import com.dong.servicedriveruser.domain.DriverUserWorkStatus;
 import com.dong.servicedriveruser.mapper.DriverUserMapper;
+import com.dong.servicedriveruser.mapper.DriverUserWorkStatusMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class DriverUserService {
     @Autowired
     private DriverUserMapper driverUserMapper;
 
+    @Autowired
+    private DriverUserWorkStatusMapper driverUserWorkStatusMapper;
+
     /**
      *  新增 司机用户
      * @return
@@ -26,6 +31,12 @@ public class DriverUserService {
         DriverUser driverUser = new DriverUser();
         BeanUtils.copyProperties(driverUserDTO,driverUser);
         driverUserMapper.insert(driverUser);
+        // 初始化 司机工作状态表
+        DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
+        driverUserWorkStatus.setDriverId(driverUser.getId());
+        driverUserWorkStatus.setWorkStatus(DriverCarConstant.WORK_STATUS_STOP);
+        driverUserWorkStatusMapper.insert(driverUserWorkStatus);
+
         return ResponseResult.success();
     }
 

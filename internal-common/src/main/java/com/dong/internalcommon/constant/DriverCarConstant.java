@@ -20,4 +20,17 @@ public class DriverCarConstant {
      */
     public static final Integer DRIVER_STATE_VALID = 0;
 
+    /**
+     *  收车
+     */
+    public static final Integer WORK_STATUS_STOP = 0;
+    /**
+     *  收出
+     */
+    public static final Integer WORK_STATUS_START = 1;
+    /**
+     *  暂停
+     */
+    public static final Integer WORD_STATE_PAUSE = 2;
+
 }
