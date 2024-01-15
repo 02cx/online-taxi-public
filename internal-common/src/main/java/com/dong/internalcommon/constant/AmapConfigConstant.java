@@ -14,6 +14,16 @@ public class AmapConfigConstant {
     public static final String DISTRICT_URL = "https://restapi.amap.com/v3/config/district";
 
     /**
+     *  新增服务url
+     */
+    public static final String SERVICE_URL = "https://tsapi.amap.com/v1/track/service/add";
+    /**
+     * 新增终端url
+     */
+    public static final String TERMINAL_URL = "https://tsapi.amap.com/v1/track/terminal/add";
+
+
+    /**
      *  路径规划 entity key
      */
     public static final String STATUS = "status";
