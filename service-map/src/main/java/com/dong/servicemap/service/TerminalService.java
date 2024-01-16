@@ -12,8 +12,9 @@ public class TerminalService {
     @Autowired
     private TerminalClient terminalClient;
 
-    public ResponseResult addTerminal(String name,String sid){
-        String tid = terminalClient.addService(name, sid);
+    public ResponseResult<TerminalResponse> addTerminal(String name){
+
+        String tid = terminalClient.addService(name);
         return ResponseResult.success(new TerminalResponse(tid));
     }
 }

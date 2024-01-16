@@ -21,6 +21,12 @@ public class AmapConfigConstant {
      * 新增终端url
      */
     public static final String TERMINAL_URL = "https://tsapi.amap.com/v1/track/terminal/add";
+    /**
+     * 新增轨迹url
+     */
+    public static final String TRACK_URL = "https://tsapi.amap.com/v1/track/trace/add";
+
+
 
 
     /**

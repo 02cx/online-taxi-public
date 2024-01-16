@@ -1,9 +1,9 @@
 package com.dong.servicemap.controller;
 
-import com.dong.internalcommon.request.TerminalDTO;
-import com.dong.internalcommon.response.TerminalResponse;
+import com.dong.internalcommon.request.TrackDTO;
+import com.dong.internalcommon.response.TrackResponse;
 import com.dong.internalcommon.result.ResponseResult;
-import com.dong.servicemap.service.TerminalService;
+import com.dong.servicemap.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/terminal")
-public class TerminalController {
+@RequestMapping("/track")
+public class TrackController {
 
     @Autowired
-    private TerminalService terminalService;
+    private TrackService trackService;
 
     @PostMapping("/add")
-    public ResponseResult<TerminalResponse> addTerminal(@RequestBody TerminalDTO terminalDTO){
-        return terminalService.addTerminal(terminalDTO.getName());
+    public ResponseResult<TrackResponse> addTrack(@RequestBody TrackDTO trackDTO){
+        return trackService.addTrack(trackDTO.getTid());
     }
 }
