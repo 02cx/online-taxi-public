@@ -1,5 +1,6 @@
 package com.dong.apidriver.remote;
 
+import com.dong.internalcommon.request.CarDTO;
 import com.dong.internalcommon.request.DriverUserDTO;
 import com.dong.internalcommon.request.VerificationCodeDTO;
 import com.dong.internalcommon.response.CheckDriverUserResponse;
@@ -18,5 +19,8 @@ public interface ServiceDriverUserClient {
 
     @GetMapping("/check-driver")
     public ResponseResult<CheckDriverUserResponse> checkDriver(@RequestBody VerificationCodeDTO verificationCodeDTO);
+
+    @GetMapping("/car")
+    public ResponseResult<CarDTO> getCarById(@RequestParam Long carId);
 }
 

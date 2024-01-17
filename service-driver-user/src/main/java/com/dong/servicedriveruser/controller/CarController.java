@@ -2,11 +2,10 @@ package com.dong.servicedriveruser.controller;
 
 import com.dong.internalcommon.request.CarDTO;
 import com.dong.internalcommon.result.ResponseResult;
+import com.dong.servicedriveruser.domain.Car;
 import com.dong.servicedriveruser.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CarController {
@@ -17,5 +16,10 @@ public class CarController {
     @PostMapping("/car")
     public ResponseResult car(@RequestBody CarDTO carDTO){
         return carService.insertCar(carDTO);
+    }
+
+    @GetMapping("/car")
+    public ResponseResult<CarDTO> getCarById( @RequestParam Long carId){
+        return carService.getCarById(carId);
     }
 }

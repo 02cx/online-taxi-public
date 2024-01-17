@@ -182,9 +182,6 @@ public class CarDTO  {
      */
     private String trname;
 
-    /**
-     * 创建时间
-
     private LocalDateTime gmtCreate;
 
     /**

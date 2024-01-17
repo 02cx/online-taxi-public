@@ -40,4 +40,9 @@ public class CarService {
 
         return ResponseResult.success();
     }
+
+    public ResponseResult<CarDTO> getCarById(Long carId){
+        Car car = carMapper.selectById(carId);
+        return ResponseResult.success(car);
+    }
 }
