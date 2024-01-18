@@ -9,4 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TerminalResponse {
     private String tid;
+
+    private String name;
+
+    private Long carId;
 }
