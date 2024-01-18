@@ -17,7 +17,7 @@ public class TerminalClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public String addService(String name){
+    public String addService(String name,String desc){
         //https://tsapi.amap.com/v1/track/service/add
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigConstant.TERMINAL_URL);
@@ -27,7 +27,11 @@ public class TerminalClient {
         urlBuilder.append("sid=" + sid);
         urlBuilder.append("&");
         urlBuilder.append("name=" + name);
+        urlBuilder.append("&");
+        urlBuilder.append("desc=" + desc);
+        System.out.println("创建终端的请求url：" + urlBuilder.toString());
         ResponseEntity<String> service = restTemplate.postForEntity(urlBuilder.toString(),null, String.class);
+        System.out.println("创建终端的响应：" + service.getBody());
         String body = service.getBody();
         JSONObject jsonObject = JSONObject.fromObject(body);
         JSONObject data = jsonObject.getJSONObject("data");

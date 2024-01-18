@@ -1,5 +1,6 @@
 package com.dong.servicemap.service;
 
+import com.dong.internalcommon.request.TerminalDTO;
 import com.dong.internalcommon.response.TerminalResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.servicemap.remote.TerminalClient;
@@ -12,9 +13,9 @@ public class TerminalService {
     @Autowired
     private TerminalClient terminalClient;
 
-    public ResponseResult<TerminalResponse> addTerminal(String name){
+    public ResponseResult<TerminalResponse> addTerminal(TerminalDTO terminalDTO){
 
-        String tid = terminalClient.addService(name);
+        String tid = terminalClient.addService(terminalDTO.getName(),terminalDTO.getDesc());
         return ResponseResult.success(new TerminalResponse(tid));
     }
 }

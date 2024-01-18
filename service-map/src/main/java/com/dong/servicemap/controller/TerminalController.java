@@ -19,6 +19,6 @@ public class TerminalController {
 
     @PostMapping("/add")
     public ResponseResult<TerminalResponse> addTerminal(@RequestBody TerminalDTO terminalDTO){
-        return terminalService.addTerminal(terminalDTO.getName());
+        return terminalService.addTerminal(terminalDTO);
     }
 }

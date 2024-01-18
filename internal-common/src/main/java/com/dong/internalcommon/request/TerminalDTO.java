@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class TerminalDTO {
 
     private String name;
+
+    private String desc;
 }
