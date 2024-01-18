@@ -15,6 +15,11 @@ public class TrackController {
     private TrackService trackService;
 
 
+    /**
+     *  轨迹点上传
+     * @param trackDTO
+     * @return
+     */
     @PostMapping("/upload-track")
     public ResponseResult uploadTrack(@RequestBody ApiDriverUploadTrackDTO trackDTO){
         return trackService.uploadTrack(trackDTO);

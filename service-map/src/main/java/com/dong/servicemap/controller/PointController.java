@@ -16,6 +16,11 @@ public class PointController {
     @Autowired
     private PointService pointService;
 
+    /**
+     * 上传轨迹点
+     * @param uploadPointDTO
+     * @return
+     */
     @PostMapping("/upload")
     public ResponseResult upload(@RequestBody UploadPointDTO uploadPointDTO){
         return pointService.uploadPoint(uploadPointDTO);
