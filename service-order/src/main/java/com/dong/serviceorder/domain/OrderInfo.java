@@ -3,6 +3,8 @@ package com.dong.serviceorder.domain;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
@@ -162,12 +164,12 @@ public class OrderInfo implements Serializable {
     /**
      * 司机到达上车点时间
      */
-    private Date driverArrivedDepartureTime;
+    private LocalDateTime driverArrivedDepartureTime;
 
     /**
      * 接到乘客，乘客上车时间
      */
-    private Date pickUpPassengerTime;
+    private LocalDateTime pickUpPassengerTime;
 
     /**
      * 接到乘客，乘客上车经度
@@ -182,7 +184,7 @@ public class OrderInfo implements Serializable {
     /**
      * 乘客下车时间
      */
-    private Date passengerGetoffTime;
+    private LocalDateTime passengerGetoffTime;
 
     /**
      * 乘客下车经度
@@ -197,7 +199,7 @@ public class OrderInfo implements Serializable {
     /**
      * 订单撤销时间
      */
-    private Date cancelTime;
+    private LocalDateTime cancelTime;
 
     /**
      * 撤销发起者：1:乘客
@@ -240,13 +242,13 @@ public class OrderInfo implements Serializable {
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private Date gmtCreate;
+    private LocalDateTime gmtCreate;
 
     /**
      * 修改时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date gmtModified;
+    private LocalDateTime gmtModified;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

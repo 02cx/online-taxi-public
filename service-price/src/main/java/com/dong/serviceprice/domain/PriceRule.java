@@ -44,6 +44,15 @@ public class PriceRule implements Serializable {
      */
     private Double unitPricePerMinute;
 
+    /**
+     * 计价类型 = cityCode + vehicleType
+     */
+    private String fareType;
+    /**
+     * 计价版本
+     */
+    private Integer fareVersion;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
