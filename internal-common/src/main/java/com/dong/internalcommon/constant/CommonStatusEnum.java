@@ -21,6 +21,8 @@ public enum CommonStatusEnum {
      * 计价规则信息：1300~1399
      */
     PRICE_RULE_NOT_EXISTS(1300,"计价规则不存在"),
+    PRICE_RULE_EXISTS(1301,"计价规则已存在"),
+    PRICE_RULE_NOT_CHANGE(1302,"修改的计价规则与最新的计价规则相同"),
     /**
      *  行政区域信息：1400~1499
      */

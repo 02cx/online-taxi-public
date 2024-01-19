@@ -1,5 +1,6 @@
 package com.dong.serviceprice.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.request.ForecastPriceDTO;
 import com.dong.internalcommon.response.DirectionResponse;
@@ -41,12 +42,21 @@ public class PriceService {
         Integer distance = responseResult.getData().getDistance();
         Integer duration = responseResult.getData().getDuration();
 
+        String cityCode = forecastPriceDTO.getCityCode();
+        String vehicleType = forecastPriceDTO.getVehicleType();
+
         // 读取计价规则
-        //WYD TODO 2024-01-12: 读取计价规则的参数写死了
-        HashMap<String, Object> map = new HashMap<>();
+       /* HashMap<String, Object> map = new HashMap<>();
         map.put("city_code","110000");
         map.put("vehicle_type","1");
-        List<PriceRule> priceRules = priceRuleMapper.selectByMap(map);
+        List<PriceRule> priceRules = priceRuleMapper.selectByMap(map);*/
+        LambdaQueryWrapper<PriceRule> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(PriceRule::getCityCode,cityCode);
+        wrapper.eq(PriceRule::getVehicleType,vehicleType);
+        wrapper.orderByDesc(PriceRule::getFareVersion);
+
+        List<PriceRule> priceRules = priceRuleMapper.selectList(wrapper);
+
         if(priceRules.size() == 0){
             return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_NOT_EXISTS);
         }
@@ -56,6 +66,8 @@ public class PriceService {
 
         ForecasePriceResponse forecasePriceResponse = new ForecasePriceResponse();
         forecasePriceResponse.setForecasePrice(forecasePrice);
+        forecasePriceResponse.setCityCode(cityCode);
+        forecasePriceResponse.setVehicleType(vehicleType);
         return ResponseResult.success(forecasePriceResponse);
     }
 

@@ -16,9 +16,24 @@ public class PriceRuleController {
     @Autowired
     private PriceRuleService priceRuleService;
 
+    /**
+     * 新增计价规则
+     * @param priceRuleDTO
+     * @return
+     */
     @PostMapping("/add")
     public ResponseResult add(@RequestBody PriceRuleDTO priceRuleDTO){
         return priceRuleService.add(priceRuleDTO);
+    }
+
+    /**
+     * 编辑计价规则
+     * @param priceRuleDTO
+     * @return
+     */
+    @PostMapping("/edit")
+    public ResponseResult edit(@RequestBody PriceRuleDTO priceRuleDTO){
+        return priceRuleService.edit(priceRuleDTO);
     }
 
 }

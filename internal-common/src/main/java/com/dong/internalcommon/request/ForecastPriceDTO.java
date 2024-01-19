@@ -8,12 +8,16 @@ import lombok.Data;
 public class ForecastPriceDTO {
 
     // 起始地经度
-    public String depLongitude;
+    private String depLongitude;
     // 起始地纬度
-    public String depLatitude;
+    private String depLatitude;
     // 目的地经度
-    public String destLongitude;
+    private String destLongitude;
     // 目的地纬度
-    public String destLatitude;
+    private String destLatitude;
+    // 城市编码
+    private String cityCode;
+    // 车辆类型
+    private String vehicleType;
 
 }
