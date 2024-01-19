@@ -56,11 +56,11 @@ public class UserService {
         }
         PassengerUser passengerUser = passengerUserList.get(0);
 
-        UserInfoVO userInfoVO = UserInfoVO.builder()
+/*        UserInfoVO userInfoVO = UserInfoVO.builder()
                 .passengerName(passengerUser.getPassengerName())
                 .profilePhoto(passengerUser.getProfilePhoto())
-                .build();
+                .build();*/
 
-        return ResponseResult.success(userInfoVO);
+        return ResponseResult.success(passengerUser);
     }
 }
