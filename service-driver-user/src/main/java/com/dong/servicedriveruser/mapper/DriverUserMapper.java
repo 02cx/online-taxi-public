@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DriverUserMapper extends BaseMapper<DriverUser> {
 
+    // 测试
+    Integer selectCountTest();
 }
 
 

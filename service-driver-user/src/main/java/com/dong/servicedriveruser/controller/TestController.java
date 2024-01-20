@@ -30,4 +30,9 @@ public class TestController {
         return ResponseResult.success(car);
     }
 
+    @GetMapping("/test_count")
+    public Integer testCount(){
+        return driverUserMapper.selectCountTest();
+    }
+
 }

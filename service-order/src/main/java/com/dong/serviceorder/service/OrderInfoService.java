@@ -39,6 +39,7 @@ public class OrderInfoService {
         OrderInfo orderInfo = new OrderInfo();
         BeanUtils.copyProperties(orderDTO,orderInfo);
         // 城市编码+车辆类型是否开通
+        // 放在这里判断原因：只有城市和车型开通了服务，才能获取到计价版本，以及用户请求
         if(!isCityVehicleExists(orderDTO)){
             return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_EXISTS);
         }
