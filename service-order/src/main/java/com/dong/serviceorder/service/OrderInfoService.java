@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.constant.OrderConstant;
 import com.dong.internalcommon.request.OrderDTO;
+import com.dong.internalcommon.request.PriceRuleDTO;
 import com.dong.internalcommon.response.PriceRuleResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.util.RedisPrefixUtils;
@@ -37,6 +38,10 @@ public class OrderInfoService {
     public ResponseResult addOrderInfo(OrderDTO orderDTO){
         OrderInfo orderInfo = new OrderInfo();
         BeanUtils.copyProperties(orderDTO,orderInfo);
+        // 城市编码+车辆类型是否开通
+        if(!isCityVehicleExists(orderDTO)){
+            return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_EXISTS);
+        }
         // 获取最新的计价版本
         ResponseResult<PriceRuleResponse> latest = servicePriceClient.latest(orderDTO.getFareType());
         PriceRuleResponse priceRuleResponse = latest.getData();
@@ -62,10 +67,25 @@ public class OrderInfoService {
             stringRedisTemplate.opsForValue().setIfAbsent(blackDeviceKey,OrderConstant.INIT_ORDER_COUNT,OrderConstant.BLACK_DEVICE_TIME, TimeUnit.HOURS);
         }
 
+
+
         orderInfo.setOrderStatus(OrderConstant.ORDER_START);
         orderInfoMapper.insert(orderInfo);
 
         return ResponseResult.success();
+    }
+
+
+    //城市编码+车辆类型是否开通
+    private Boolean isCityVehicleExists(OrderDTO orderDTO){
+        String fareType = orderDTO.getFareType();
+        int index = fareType.indexOf("$");
+        PriceRuleDTO priceRuleDTO = new PriceRuleDTO();
+        priceRuleDTO.setCityCode(fareType.substring(0,index));
+        priceRuleDTO.setVehicleType(fareType.substring(index + 1,fareType.length()));
+
+        ResponseResult<Boolean> responseResult = servicePriceClient.ifExists(priceRuleDTO);
+        return responseResult.getData();
     }
 
 
