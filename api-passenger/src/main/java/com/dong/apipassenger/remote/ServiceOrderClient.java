@@ -14,6 +14,6 @@ public interface ServiceOrderClient {
      * @param orderDTO
      * @return
      */
-    @PostMapping("/add")
+    @PostMapping("/order/add")
     public ResponseResult add(@RequestBody OrderDTO orderDTO);
 }

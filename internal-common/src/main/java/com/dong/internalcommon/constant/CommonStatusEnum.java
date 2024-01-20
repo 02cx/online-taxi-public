@@ -23,6 +23,7 @@ public enum CommonStatusEnum {
     PRICE_RULE_NOT_EXISTS(1300,"计价规则不存在"),
     PRICE_RULE_EXISTS(1301,"计价规则已存在"),
     PRICE_RULE_NOT_CHANGE(1302,"修改的计价规则与最新的计价规则相同"),
+    FARE_VERSION_NOT_NEW(1303,"计价规则不是最新"),
     /**
      *  行政区域信息：1400~1499
      */
@@ -41,6 +42,12 @@ public enum CommonStatusEnum {
     DRIVER_CAR_UNBINDING(1504,"司机车辆已处于解绑状态"),
 
     DRIVER_USER_NOT_EXISTS(1505,"司机不存在"),
+    /**
+     *  订单信息：1600~1699
+     */
+    ORDER_GOING_ON(1600,"有正在进行的订单"),
+    DEVICE_INVALID(1601,"用户设备号超出下单限制次数"),
+
 
     /**
      * 验证码已过期

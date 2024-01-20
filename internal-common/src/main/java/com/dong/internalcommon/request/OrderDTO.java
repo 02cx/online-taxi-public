@@ -42,13 +42,11 @@ public class OrderDTO {
     private Integer encrypt;
     // 运价类型编码
     private String fareType;
-
-
     // 运价版本
     private Integer fareVersion;
-//
-//    // 请求设备唯一码
-//    private String deviceCode;
+
+    // 请求设备唯一码
+    private String deviceCode;
 //
 //    /**
 //     * 司机去接乘客出发时间

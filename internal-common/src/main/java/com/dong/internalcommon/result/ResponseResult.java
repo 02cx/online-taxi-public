@@ -72,4 +72,9 @@ public class ResponseResult<T> {
     public static ResponseResult fail(CommonStatusEnum commonStatusEnum){
         return new ResponseResult().setCode(commonStatusEnum.getCode()).setMessage(commonStatusEnum.getMessage());
     }
+
+    public static <T>ResponseResult fail(CommonStatusEnum commonStatusEnum,T data){
+        return new ResponseResult().setCode(commonStatusEnum.getCode()).setMessage(commonStatusEnum.getMessage()).setData(data);
+    }
+
 }

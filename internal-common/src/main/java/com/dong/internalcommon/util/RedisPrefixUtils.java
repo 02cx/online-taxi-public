@@ -6,6 +6,8 @@ public class RedisPrefixUtils {
     private static String verificationCodePrefix = "verification_code_";
     // token key
     private static String tokenPrefix = "token_";
+    // 乘客设备黑名单
+    public static String blackDeviceCodePrefix = "black_device_";
 
     /**
      * 生成redis的key

@@ -11,6 +11,11 @@ public class OrderService {
     @Autowired
     private ServiceOrderClient serviceOrderClient;
 
+    /**
+     * 生成订单
+     * @param orderDTO
+     * @return
+     */
     public ResponseResult generatorOrder(OrderDTO orderDTO){
         return serviceOrderClient.add(orderDTO);
     }
