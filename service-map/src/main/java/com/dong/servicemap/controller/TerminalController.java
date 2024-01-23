@@ -30,6 +30,11 @@ public class TerminalController {
         return terminalService.addTerminal(terminalDTO);
     }
 
+    /**
+     *  周边搜索终端
+     * @param aroundSearchTerminalDTO
+     * @return
+     */
     @PostMapping("/aroundsearch")
     public ResponseResult<List<TerminalResponse>> aroundSearchTerminal(@RequestBody AroundSearchTerminalDTO aroundSearchTerminalDTO){
         return terminalService.aroundSearchTerminal(aroundSearchTerminalDTO);

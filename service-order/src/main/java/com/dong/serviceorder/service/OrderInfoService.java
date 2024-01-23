@@ -3,24 +3,30 @@ package com.dong.serviceorder.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.constant.OrderConstant;
+import com.dong.internalcommon.request.AroundSearchTerminalDTO;
 import com.dong.internalcommon.request.OrderDTO;
 import com.dong.internalcommon.request.PriceRuleDTO;
 import com.dong.internalcommon.response.PriceRuleResponse;
+import com.dong.internalcommon.response.TerminalResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.util.RedisPrefixUtils;
 import com.dong.serviceorder.domain.OrderInfo;
 import com.dong.serviceorder.mapper.OrderInfoMapper;
 import com.dong.serviceorder.remote.ServiceDriverUserClient;
+import com.dong.serviceorder.remote.ServiceMapClient;
 import com.dong.serviceorder.remote.ServicePriceClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
 @Service
+@Slf4j
 public class OrderInfoService {
     @Autowired
     private OrderInfoMapper orderInfoMapper;
@@ -33,6 +39,9 @@ public class OrderInfoService {
 
     @Autowired
     private ServiceDriverUserClient serviceDriverUserClient;
+
+    @Autowired
+    private ServiceMapClient serviceMapClient;
 
     /**
      * 新增订单
@@ -78,12 +87,37 @@ public class OrderInfoService {
             stringRedisTemplate.opsForValue().setIfAbsent(blackDeviceKey,OrderConstant.INIT_ORDER_COUNT,OrderConstant.BLACK_DEVICE_TIME, TimeUnit.HOURS);
         }
 
-
+        // 周边终端搜索
+        dispatchRealTimeOrder(orderInfo);
 
         orderInfo.setOrderStatus(OrderConstant.ORDER_START);
         orderInfoMapper.insert(orderInfo);
 
         return ResponseResult.success();
+    }
+
+
+
+    /**
+     *  周边终端搜索
+     * @param orderInfo
+     */
+    public void dispatchRealTimeOrder(OrderInfo orderInfo){
+        AroundSearchTerminalDTO aroundSearchTerminalDTO = new AroundSearchTerminalDTO();
+        aroundSearchTerminalDTO.setCenter(orderInfo.getDepLatitude() + "," + orderInfo.getDepLongitude());
+        aroundSearchTerminalDTO.setRadius(2);
+        ResponseResult<List<TerminalResponse>> listResponseResult = serviceMapClient.aroundSearchTerminal(aroundSearchTerminalDTO);
+        if(listResponseResult.getData().size() == 0){
+            aroundSearchTerminalDTO.setRadius(4);
+            listResponseResult = serviceMapClient.aroundSearchTerminal(aroundSearchTerminalDTO);
+            if(listResponseResult.getData().size() == 0){
+                aroundSearchTerminalDTO.setRadius(5);
+                listResponseResult = serviceMapClient.aroundSearchTerminal(aroundSearchTerminalDTO);
+                if(listResponseResult.getData().size() == 0){
+                    log.info("周边2km,4km,5km内没有搜索到有效的司机");
+                }
+            }
+        }
     }
 
 
