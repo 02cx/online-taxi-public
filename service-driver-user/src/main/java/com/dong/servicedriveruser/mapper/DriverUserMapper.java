@@ -15,6 +15,9 @@ public interface DriverUserMapper extends BaseMapper<DriverUser> {
 
     // 测试
     Integer selectCountTest();
+
+    // 根据城市编码查询城市是否有可用司机
+    Integer isAvailableDriver(String cityCode);
 }
 
 

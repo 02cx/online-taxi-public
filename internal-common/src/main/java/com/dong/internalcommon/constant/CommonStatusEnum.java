@@ -42,6 +42,8 @@ public enum CommonStatusEnum {
     DRIVER_CAR_UNBINDING(1504,"司机车辆已处于解绑状态"),
 
     DRIVER_USER_NOT_EXISTS(1505,"司机不存在"),
+
+    CITY_DRIVER_NOT_AVAILABLE(1506,"该城市没有可用的司机"),
     /**
      *  订单信息：1600~1699
      */

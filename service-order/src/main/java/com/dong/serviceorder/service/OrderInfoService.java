@@ -10,6 +10,7 @@ import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.util.RedisPrefixUtils;
 import com.dong.serviceorder.domain.OrderInfo;
 import com.dong.serviceorder.mapper.OrderInfoMapper;
+import com.dong.serviceorder.remote.ServiceDriverUserClient;
 import com.dong.serviceorder.remote.ServicePriceClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class OrderInfoService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    private ServiceDriverUserClient serviceDriverUserClient;
+
     /**
      * 新增订单
      * @param orderDTO
@@ -42,6 +46,12 @@ public class OrderInfoService {
         // 放在这里判断原因：只有城市和车型开通了服务，才能获取到计价版本，以及用户请求
         if(!isCityVehicleExists(orderDTO)){
             return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_EXISTS);
+        }
+        // 判断城市是否有可用司机
+        String cityCode = orderDTO.getAddress();
+        ResponseResult<Boolean> driverAvailable = serviceDriverUserClient.isDriverAvailable(cityCode);
+        if(!driverAvailable.getData()){
+            return ResponseResult.fail(CommonStatusEnum.CITY_DRIVER_NOT_AVAILABLE);
         }
         // 获取最新的计价版本
         ResponseResult<PriceRuleResponse> latest = servicePriceClient.latest(orderDTO.getFareType());
