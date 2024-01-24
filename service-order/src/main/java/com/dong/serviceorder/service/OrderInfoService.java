@@ -6,6 +6,7 @@ import com.dong.internalcommon.constant.OrderConstant;
 import com.dong.internalcommon.request.AroundSearchTerminalDTO;
 import com.dong.internalcommon.request.OrderDTO;
 import com.dong.internalcommon.request.PriceRuleDTO;
+import com.dong.internalcommon.response.OrderDriverResponse;
 import com.dong.internalcommon.response.PriceRuleResponse;
 import com.dong.internalcommon.response.TerminalResponse;
 import com.dong.internalcommon.result.ResponseResult;
@@ -16,11 +17,14 @@ import com.dong.serviceorder.remote.ServiceDriverUserClient;
 import com.dong.serviceorder.remote.ServiceMapClient;
 import com.dong.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -105,18 +109,34 @@ public class OrderInfoService {
     public void dispatchRealTimeOrder(OrderInfo orderInfo){
         AroundSearchTerminalDTO aroundSearchTerminalDTO = new AroundSearchTerminalDTO();
         aroundSearchTerminalDTO.setCenter(orderInfo.getDepLatitude() + "," + orderInfo.getDepLongitude());
-        aroundSearchTerminalDTO.setRadius(2);
-        ResponseResult<List<TerminalResponse>> listResponseResult = serviceMapClient.aroundSearchTerminal(aroundSearchTerminalDTO);
-        if(listResponseResult.getData().size() == 0){
-            aroundSearchTerminalDTO.setRadius(4);
-            listResponseResult = serviceMapClient.aroundSearchTerminal(aroundSearchTerminalDTO);
-            if(listResponseResult.getData().size() == 0){
-                aroundSearchTerminalDTO.setRadius(5);
-                listResponseResult = serviceMapClient.aroundSearchTerminal(aroundSearchTerminalDTO);
-                if(listResponseResult.getData().size() == 0){
-                    log.info("周边2km,4km,5km内没有搜索到有效的司机");
-                }
+
+        ArrayList<Integer> radiusList = new ArrayList<>();
+        radiusList.add(2000);
+        radiusList.add(4000);
+        radiusList.add(5000);
+
+        for (int i = 0; i < radiusList.size(); i++) {
+            Integer radius = radiusList.get(i);
+            aroundSearchTerminalDTO.setRadius(radius);
+            log.info("在半径" + radius + "m内搜索终端");
+            // 获取终端
+            ResponseResult<List<TerminalResponse>> listResponseResult = serviceMapClient.aroundSearchTerminal(aroundSearchTerminalDTO);
+            // 解析终端
+            List<TerminalResponse> data = listResponseResult.getData();
+            log.info("搜索结果" + data);
+            // 根据解析出来的终端，查询车辆信息
+            for (int j = 0; j < data.size(); j++) {
+                TerminalResponse terminalResponse = data.get(j);
+                Long carId = terminalResponse.getCarId();
+                ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
+                OrderDriverResponse orderDriverResponse = availableDriver.getData();
+                log.info("搜索到的终端对应的司机信息：" + orderDriverResponse);
             }
+
+            //找到符合条件的车辆，进行派单
+
+            // 如果派单成功，则跳出循环
+
         }
     }
 
