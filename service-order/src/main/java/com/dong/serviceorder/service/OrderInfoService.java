@@ -95,12 +95,11 @@ public class OrderInfoService {
             stringRedisTemplate.opsForValue().setIfAbsent(blackDeviceKey,OrderConstant.INIT_ORDER_COUNT,OrderConstant.BLACK_DEVICE_TIME, TimeUnit.HOURS);
         }
         orderInfo.setOrderStatus(OrderConstant.ORDER_START);
-
-        // 周边终端搜索
-        dispatchRealTimeOrder(orderInfo);
-
-
         orderInfoMapper.insert(orderInfo);
+
+
+        // 周边终端搜索【派单】
+        dispatchRealTimeOrder(orderInfo);
 
         return ResponseResult.success();
     }
@@ -108,10 +107,10 @@ public class OrderInfoService {
 
 
     /**
-     *  周边终端搜索
+     *  周边终端搜索----派单
      * @param orderInfo
      */
-    public void dispatchRealTimeOrder(OrderInfo orderInfo){
+    public synchronized void dispatchRealTimeOrder(OrderInfo orderInfo){
         AroundSearchTerminalDTO aroundSearchTerminalDTO = new AroundSearchTerminalDTO();
         aroundSearchTerminalDTO.setCenter(orderInfo.getDepLatitude() + "," + orderInfo.getDepLongitude());
 
@@ -168,7 +167,7 @@ public class OrderInfoService {
 
 
             // 如果派单成功，则跳出循环
-
+            orderInfoMapper.updateById(orderInfo);
         }
     }
 
