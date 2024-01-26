@@ -13,4 +13,8 @@ public class TerminalResponse {
     private String name;
 
     private Long carId;
+
+    // 车辆去接乘客时的经纬度
+    private String latitude;
+    private String longitude;
 }

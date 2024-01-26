@@ -29,6 +29,11 @@ public class TerminalService {
         return ResponseResult.success(terminalResponse);
     }
 
+    /**
+     *  周边搜索终端
+     * @param aroundSearchTerminalDTO
+     * @return
+     */
     public ResponseResult<List<TerminalResponse>> aroundSearchTerminal(AroundSearchTerminalDTO aroundSearchTerminalDTO){
         return terminalClient.aroundSearchTerminal(aroundSearchTerminalDTO.getCenter(),aroundSearchTerminalDTO.getRadius());
     }

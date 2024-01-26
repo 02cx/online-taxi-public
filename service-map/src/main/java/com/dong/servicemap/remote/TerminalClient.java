@@ -78,13 +78,23 @@ public class TerminalClient {
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject result = jsonArray.getJSONObject(i);
             String name = result.getString("name");
-            Long carId = result.getLong("desc");
+
+            //WYD TODO 2024-01-26: Long carId = result.getLong("desc");   直接用getLong获取可能出现BUG
+            String carIdStr = result.getString("desc");
+            Long carId = Long.parseLong(carIdStr);
             Integer tid = result.getInt("tid");
+
+            // 获取司机去接乘客时的经纬度
+            JSONObject location = result.getJSONObject("location");
+            String latitude = location.getString("latitude");
+            String longitude = location.getString("longitude");
 
             TerminalResponse terminalResponse = new TerminalResponse();
             terminalResponse.setName(name);
             terminalResponse.setCarId(carId);
             terminalResponse.setTid(tid + "");
+            terminalResponse.setLatitude(latitude);
+            terminalResponse.setLongitude(longitude);
             list.add(terminalResponse);
         }
 

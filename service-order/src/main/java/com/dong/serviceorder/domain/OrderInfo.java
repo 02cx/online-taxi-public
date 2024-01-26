@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
+import org.apache.tomcat.jni.Local;
 
 /**
  * 
@@ -59,12 +60,12 @@ public class OrderInfo implements Serializable {
     /**
      * 订单发起时间
      */
-    private Date orderTime;
+    private LocalDateTime orderTime;
 
     /**
      * 预计用车时间
      */
-    private Date departTime;
+    private LocalDateTime departTime;
 
     /**
      * 预计出发地点详细地址
@@ -129,7 +130,7 @@ public class OrderInfo implements Serializable {
     /**
      * 接单时间，派单成功时间
      */
-    private Date receiveOrderTime;
+    private LocalDateTime receiveOrderTime;
 
     /**
      * 机动车驾驶证号
@@ -144,7 +145,7 @@ public class OrderInfo implements Serializable {
     /**
      * 司机去接乘客出发时间
      */
-    private Date toPickUpPassengerTime;
+    private LocalDateTime toPickUpPassengerTime;
 
     /**
      * 去接乘客时，司机的经度

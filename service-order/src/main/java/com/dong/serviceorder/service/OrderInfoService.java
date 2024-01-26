@@ -2,6 +2,7 @@ package com.dong.serviceorder.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dong.internalcommon.constant.CommonStatusEnum;
+import com.dong.internalcommon.constant.DriverCarConstant;
 import com.dong.internalcommon.constant.OrderConstant;
 import com.dong.internalcommon.request.AroundSearchTerminalDTO;
 import com.dong.internalcommon.request.OrderDTO;
@@ -20,10 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +74,7 @@ public class OrderInfoService {
         PriceRuleResponse priceRuleResponse = latest.getData();
         orderInfo.setFareVersion(priceRuleResponse.getFareVersion());
         // 判断用户是否有订单还在继续
-        int count = orderOnGoing(orderDTO.getPassengerId());
+        int count = passengerOrderOnGoing(orderDTO.getPassengerId());
         if(count != 0){
             return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON);
         }
@@ -82,7 +85,8 @@ public class OrderInfoService {
             // blackDeviceKey 存在
             String s = stringRedisTemplate.opsForValue().get(blackDeviceKey);
             Integer accessCount  = Integer.parseInt(s);
-            if(accessCount >= 2){
+            //WYD TODO 2024-01-25: 访问次数应该为2，为了方便测试这里改为100
+            if(accessCount >= 100){
                 return ResponseResult.fail(CommonStatusEnum.DEVICE_INVALID);
             }
             stringRedisTemplate.opsForValue().increment(blackDeviceKey);
@@ -90,11 +94,12 @@ public class OrderInfoService {
             // blackDeviceKey 不存在，用户第一次下单
             stringRedisTemplate.opsForValue().setIfAbsent(blackDeviceKey,OrderConstant.INIT_ORDER_COUNT,OrderConstant.BLACK_DEVICE_TIME, TimeUnit.HOURS);
         }
+        orderInfo.setOrderStatus(OrderConstant.ORDER_START);
 
         // 周边终端搜索
         dispatchRealTimeOrder(orderInfo);
 
-        orderInfo.setOrderStatus(OrderConstant.ORDER_START);
+
         orderInfoMapper.insert(orderInfo);
 
         return ResponseResult.success();
@@ -115,7 +120,8 @@ public class OrderInfoService {
         radiusList.add(4000);
         radiusList.add(5000);
 
-        for (int i = 0; i < radiusList.size(); i++) {
+        boolean flag = true;
+        for (int i = 0; i < radiusList.size() && flag; i++) {
             Integer radius = radiusList.get(i);
             aroundSearchTerminalDTO.setRadius(radius);
             log.info("在半径" + radius + "m内搜索终端");
@@ -125,15 +131,41 @@ public class OrderInfoService {
             List<TerminalResponse> data = listResponseResult.getData();
             log.info("搜索结果" + data);
             // 根据解析出来的终端，查询车辆信息
-            for (int j = 0; j < data.size(); j++) {
+            for (int j = 0; j < data.size() && flag; j++) {
                 TerminalResponse terminalResponse = data.get(j);
                 Long carId = terminalResponse.getCarId();
                 ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
                 OrderDriverResponse orderDriverResponse = availableDriver.getData();
                 log.info("搜索到的终端对应的司机信息：" + orderDriverResponse);
+                if(availableDriver.getCode() != 1){
+                    log.info("没有车辆的carId:" + carId + "对应的司机");
+                }else{
+                    log.info("车辆Id：" + carId + "找到了正在出车的司机");
+                    Long driverId = orderDriverResponse.getDriverId();
+                    // 查询司机是否有正在进行的订单
+                    if (driverOrderOnGoing(driverId)  > 0) {
+                        continue;
+                    }
+
+                    orderInfo.setDriverId(driverId);
+                    orderInfo.setDriverPhone(orderDriverResponse.getDriverPhone());
+                    orderInfo.setCarId(orderDriverResponse.getCarId());
+                    orderInfo.setVehicleType(orderDriverResponse.getVehicleType());
+                    orderInfo.setOrderTime(LocalDateTime.now());
+                    orderInfo.setDepartTime(LocalDateTime.now());
+                    orderInfo.setReceiveOrderCarLongitude(terminalResponse.getLongitude());
+                    orderInfo.setReceiveOrderCarLatitude(terminalResponse.getLatitude());
+                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
+
+                    orderInfo.setLicenseId(orderDriverResponse.getLicenseId());
+                    orderInfo.setVehicleNo(orderDriverResponse.getVehicleNo());
+
+                    orderInfo.setOrderStatus(OrderConstant.DRIVER_TAKE_ORDER);
+
+                    flag = false;
+                }
             }
 
-            //找到符合条件的车辆，进行派单
 
             // 如果派单成功，则跳出循环
 
@@ -155,11 +187,11 @@ public class OrderInfoService {
 
 
     /**
-     *  查找进行中的订单
+     *  查找乘客进行中的订单
      * @param passengerId
      * @return
      */
-    public int orderOnGoing(Long passengerId){
+    public int passengerOrderOnGoing(Long passengerId){
         LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OrderInfo::getPassengerId,passengerId);
         queryWrapper.and(wrapper -> wrapper.eq(OrderInfo::getOrderStatus, OrderConstant.ORDER_START)
@@ -169,6 +201,22 @@ public class OrderInfoService {
                 .or().eq(OrderInfo::getOrderStatus, OrderConstant.START_ITINERARY)
                 .or().eq(OrderInfo::getOrderStatus, OrderConstant.INITIATE_COLLECTION)
                 .or().eq(OrderInfo::getOrderStatus, OrderConstant.ORDER_UNPAID));
+        Integer count = orderInfoMapper.selectCount(queryWrapper);
+        return count;
+    }
+
+    /**
+     *  查找司机进行中的订单
+     * @param driverId
+     * @return
+     */
+    public int driverOrderOnGoing(Long driverId){
+        LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderInfo::getDriverId,driverId);
+        queryWrapper.and(wrapper -> wrapper.eq(OrderInfo::getOrderStatus, OrderConstant.DRIVER_TAKE_ORDER)
+                .or().eq(OrderInfo::getOrderStatus, OrderConstant.ORDER_GOING_PASSENGER)
+                .or().eq(OrderInfo::getOrderStatus, OrderConstant.DRIVER_ARRIVE_PICK)
+                .or().eq(OrderInfo::getOrderStatus, OrderConstant.START_ITINERARY));
         Integer count = orderInfoMapper.selectCount(queryWrapper);
         return count;
     }

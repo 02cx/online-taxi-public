@@ -37,7 +37,8 @@ public class TerminalController {
      */
     @PostMapping("/aroundsearch")
     public ResponseResult<List<TerminalResponse>> aroundSearchTerminal(@RequestBody AroundSearchTerminalDTO aroundSearchTerminalDTO){
-        return terminalService.aroundSearchTerminal(aroundSearchTerminalDTO);
+        ResponseResult<List<TerminalResponse>> listResponseResult = terminalService.aroundSearchTerminal(aroundSearchTerminalDTO);
+        return listResponseResult;
     }
 
 }

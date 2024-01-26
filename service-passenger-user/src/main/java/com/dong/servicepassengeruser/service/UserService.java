@@ -29,6 +29,7 @@ public class UserService {
         if(passengerUserList.size() == 0){
             PassengerUser passengerUser = new PassengerUser();
             passengerUser.setPassengerPhone(passengerPhone);
+            //WYD TODO 2024-01-25:乘客姓名写死在代码中，需要从前端传过来
             passengerUser.setPassengerName("张三");
             passengerUser.setPassengerGender((byte)0);
             passengerUser.setState((byte) 0);

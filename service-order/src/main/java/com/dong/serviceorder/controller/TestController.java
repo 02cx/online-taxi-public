@@ -13,6 +13,6 @@ public class TestController {
 
     @GetMapping("/test1")
     public Integer test1(){
-        return orderInfoService.orderOnGoing(3L);
+        return orderInfoService.passengerOrderOnGoing(3L);
     }
 }
