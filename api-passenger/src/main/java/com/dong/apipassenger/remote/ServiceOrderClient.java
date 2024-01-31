@@ -3,6 +3,8 @@ package com.dong.apipassenger.remote;
 import com.dong.internalcommon.request.OrderDTO;
 import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -16,4 +18,7 @@ public interface ServiceOrderClient {
      */
     @PostMapping("/order/add")
     public ResponseResult add(@RequestBody OrderDTO orderDTO);
+
+    @GetMapping("/test-real-time-order/{orderId}")
+    public String testRealTimeOrder(@PathVariable Long orderId);
 }

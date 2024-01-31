@@ -20,6 +20,8 @@ import com.dong.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,9 @@ public class OrderInfoService {
 
     @Autowired
     private ServiceMapClient serviceMapClient;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     /**
      * 新增订单
@@ -146,8 +151,13 @@ public class OrderInfoService {
 
                     //synchronized (driverId){  // 不能解决并发问题
                     //synchronized ((driverId + "").intern()){  // 能解决并发问题
+                    String lock = (driverId + "").intern();
+                    RLock rLock = redissonClient.getLock(lock);
+                    rLock.lock(30,TimeUnit.SECONDS);
+
                     // 查询司机是否有正在进行的订单
                     if (driverOrderOnGoing(driverId) > 0) {
+                        rLock.unlock();
                         continue;
                     }
 
@@ -169,7 +179,7 @@ public class OrderInfoService {
                     flag = false;
                     // 如果派单成功，则跳出循环
                     orderInfoMapper.updateById(orderInfo);
-
+                    rLock.unlock();
 
                 }
             }
