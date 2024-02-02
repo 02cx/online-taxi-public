@@ -15,14 +15,18 @@
     <groupId>com.dong</groupId>
     <artifactId>service-sse-push</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sse-driver-client-web</name>
-    <description>sse-driver-client-web</description>
 
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- nacos 依赖-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
     </dependencies>
