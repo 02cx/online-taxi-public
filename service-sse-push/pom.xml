@@ -13,7 +13,7 @@
 
 
     <groupId>com.dong</groupId>
-    <artifactId>sse-driver-client-web</artifactId>
+    <artifactId>service-sse-push</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>sse-driver-client-web</name>
     <description>sse-driver-client-web</description>
