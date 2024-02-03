@@ -3,8 +3,10 @@ package com.dong.serviceorder.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.constant.DriverCarConstant;
+import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.constant.OrderConstant;
 import com.dong.internalcommon.request.AroundSearchTerminalDTO;
+import com.dong.internalcommon.request.CarDTO;
 import com.dong.internalcommon.request.OrderDTO;
 import com.dong.internalcommon.request.PriceRuleDTO;
 import com.dong.internalcommon.response.OrderDriverResponse;
@@ -17,6 +19,7 @@ import com.dong.serviceorder.mapper.OrderInfoMapper;
 import com.dong.serviceorder.remote.ServiceDriverUserClient;
 import com.dong.serviceorder.remote.ServiceMapClient;
 import com.dong.serviceorder.remote.ServicePriceClient;
+import com.dong.serviceorder.remote.ServiceSsePushClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -54,6 +57,9 @@ public class OrderInfoService {
 
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private ServiceSsePushClient serviceSsePushClient;
 
     /**
      * 新增订单
@@ -176,11 +182,42 @@ public class OrderInfoService {
 
                     orderInfo.setOrderStatus(OrderConstant.DRIVER_TAKE_ORDER);
 
-                    flag = false;
+                    // 推送消息给司机
+                    JSONObject driverContent = new JSONObject();
+                    driverContent.put("passengerId",orderInfo.getPassengerId());
+                    driverContent.put("passengerPhone",orderInfo.getPassengerPhone());
+                    // 乘客出发地
+                    driverContent.put("departure",orderInfo.getDeparture());
+                    driverContent.put("depLongitude",orderInfo.getDepLongitude());
+                    driverContent.put("depLatitude",orderInfo.getDepLatitude());
+                    // 乘客目的地
+                    driverContent.put("destination",orderInfo.getDestination());
+                    driverContent.put("destLongitude",orderInfo.getDestLongitude());
+                    driverContent.put("destLatitude",orderInfo.getDestLatitude());
+
+                    serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY,driverContent.toString());
+
+                    // 推送消息给乘客
+                    JSONObject passengerContent = new JSONObject();
+                    passengerContent.put("driverId",orderInfo.getDriverId());
+                    passengerContent.put("driverPhone",orderInfo.getDriverPhone());
+                    // 司机出发地
+                    passengerContent.put("receiveOrderCarLongitude",orderInfo.getReceiveOrderCarLongitude());
+                    passengerContent.put("receiveOrderCarLatitude",orderInfo.getReceiveOrderCarLatitude());
+                    // 车辆信息
+                    ResponseResult<CarDTO> carById = serviceDriverUserClient.getCarById(carId);
+                    CarDTO carDTO = carById.getData();
+                    passengerContent.put("brand",carDTO.getBrand());
+                    passengerContent.put("model",carDTO.getModel());
+                    passengerContent.put("vehicleNo",carDTO.getVehicleNo());
+                    serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstant.PASSENGER_IDENTITY,passengerContent.toString());
+
+
+
                     // 如果派单成功，则跳出循环
                     orderInfoMapper.updateById(orderInfo);
                     rLock.unlock();
-
+                    flag = false;
                 }
             }
 
