@@ -7,6 +7,7 @@ import com.dong.internalcommon.result.ResponseResult;
 import com.dong.servicemap.remote.TerminalClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -36,5 +37,16 @@ public class TerminalService {
      */
     public ResponseResult<List<TerminalResponse>> aroundSearchTerminal(AroundSearchTerminalDTO aroundSearchTerminalDTO){
         return terminalClient.aroundSearchTerminal(aroundSearchTerminalDTO.getCenter(),aroundSearchTerminalDTO.getRadius());
+    }
+
+    /**
+     * 查询轨迹信息
+     * @param tid
+     * @param starttime
+     * @param endtime
+     * @return
+     */
+    public ResponseResult trsearch(String tid,Long starttime,Long endtime){
+        return terminalClient.terminalTrsearch(tid,starttime,endtime);
     }
 }

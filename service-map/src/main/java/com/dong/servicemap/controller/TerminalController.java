@@ -6,10 +6,7 @@ import com.dong.internalcommon.response.TerminalResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.servicemap.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,6 +36,18 @@ public class TerminalController {
     public ResponseResult<List<TerminalResponse>> aroundSearchTerminal(@RequestBody AroundSearchTerminalDTO aroundSearchTerminalDTO){
         ResponseResult<List<TerminalResponse>> listResponseResult = terminalService.aroundSearchTerminal(aroundSearchTerminalDTO);
         return listResponseResult;
+    }
+
+    /**
+     * 查询轨迹信息
+     * @param tid
+     * @param starttime
+     * @param endtime
+     * @return
+     */
+    @GetMapping("/trsearch")
+    public ResponseResult trsearch(String tid,Long starttime,Long endtime){
+        return terminalService.trsearch(tid,starttime,endtime);
     }
 
 }

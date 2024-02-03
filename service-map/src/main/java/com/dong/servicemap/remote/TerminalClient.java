@@ -51,7 +51,12 @@ public class TerminalClient {
         return tid;
     }
 
-
+    /**
+     *  周边终端搜索
+     * @param center
+     * @param radius
+     * @return
+     */
     public ResponseResult<List<TerminalResponse>> aroundSearchTerminal(String center,Integer radius){
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigConstant.AROUND_SEARCH_URL);
@@ -99,5 +104,33 @@ public class TerminalClient {
         }
 
         return ResponseResult.success(list);
+    }
+
+    /**
+     *  查询轨迹信息
+     * @param tid
+     * @param starttime
+     * @param endtime
+     * @return
+     */
+    public ResponseResult terminalTrsearch(String tid,Long starttime,Long endtime){
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder.append(AmapConfigConstant.TERMINAL_TRSEARCH);
+        urlBuilder.append("?");
+        urlBuilder.append("key=" + key);
+        urlBuilder.append("&");
+        urlBuilder.append("sid=" + sid);
+        urlBuilder.append("&");
+        urlBuilder.append("tid=" + tid);
+        urlBuilder.append("&");
+        urlBuilder.append("starttime=" + starttime);
+        urlBuilder.append("&");
+        urlBuilder.append("endtime=" + endtime);
+
+        System.out.println("查询轨迹信息URL：" + urlBuilder.toString());
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(urlBuilder.toString(), String.class);
+        System.out.println("查询轨迹信息响应信息：" + forEntity.getBody());
+
+        return ResponseResult.success(forEntity.getBody());
     }
 }
