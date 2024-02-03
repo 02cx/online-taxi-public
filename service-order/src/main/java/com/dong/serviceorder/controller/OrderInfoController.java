@@ -49,4 +49,24 @@ public class OrderInfoController {
         return orderInfoService.driverArrivedDeparture(orderDTO);
     }
 
+    /**
+     * 乘客上车
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/pick-up-passenger")
+    public ResponseResult pickUpPassenger(@RequestBody OrderDTO orderDTO){
+        return orderInfoService.pickUpPassenger(orderDTO);
+    }
+
+    /**
+     * 乘客到达目的地，下车
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/passenger-getoff")
+    public ResponseResult passengerGetoff(@RequestBody OrderDTO orderDTO){
+        return orderInfoService.passengerGetoff(orderDTO);
+    }
+
 }

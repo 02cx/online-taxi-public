@@ -308,4 +308,39 @@ public class OrderInfoService {
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success();
     }
+
+    /**
+     * 乘客上车
+     * @param orderDTO
+     * @return
+     */
+    public ResponseResult pickUpPassenger(OrderDTO orderDTO){
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderDTO.getOrderId());
+
+        orderInfo.setPickUpPassengerTime(LocalDateTime.now());
+        orderInfo.setPickUpPassengerLongitude(orderDTO.getPickUpPassengerLongitude());
+        orderInfo.setPickUpPassengerLatitude(orderDTO.getPickUpPassengerLatitude());
+        orderInfo.setOrderStatus(OrderConstant.START_ITINERARY);
+        orderInfoMapper.updateById(orderInfo);
+
+        return ResponseResult.success();
+    }
+
+    /**
+     * 乘客到达目的地，下车
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/passenger-getoff")
+    public ResponseResult passengerGetoff(@RequestBody OrderDTO orderDTO){
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderDTO.getOrderId());
+
+        orderInfo.setPassengerGetoffTime(LocalDateTime.now());
+        orderInfo.setPassengerGetoffLongitude(orderDTO.getPassengerGetoffLongitude());
+        orderInfo.setPassengerGetoffLatitude(orderDTO.getPassengerGetoffLatitude());
+        orderInfo.setOrderStatus(OrderConstant.ORDER_UNPAID);
+        orderInfoMapper.updateById(orderInfo);
+
+        return ResponseResult.success();
+    }
 }
