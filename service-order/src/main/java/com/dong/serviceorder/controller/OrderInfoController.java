@@ -28,4 +28,25 @@ public class OrderInfoController {
         log.info(orderDTO.toString());
         return orderInfoService.addOrderInfo(orderDTO);
     }
+
+    /**
+     * 司机去接乘客
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/to-pick-up-passenger")
+    public ResponseResult toPickUpPassenger(@RequestBody OrderDTO orderDTO){
+        return orderInfoService.toPickUpPassenger(orderDTO);
+    }
+
+    /**
+     * 司机到达乘客上车点
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/driver-arrived-departure")
+    public ResponseResult driverArrivedDeparture(@RequestBody OrderDTO orderDTO){
+        return orderInfoService.driverArrivedDeparture(orderDTO);
+    }
+
 }

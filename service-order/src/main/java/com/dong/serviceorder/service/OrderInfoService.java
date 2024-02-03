@@ -2,7 +2,6 @@ package com.dong.serviceorder.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dong.internalcommon.constant.CommonStatusEnum;
-import com.dong.internalcommon.constant.DriverCarConstant;
 import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.constant.OrderConstant;
 import com.dong.internalcommon.request.AroundSearchTerminalDTO;
@@ -21,15 +20,15 @@ import com.dong.serviceorder.remote.ServiceMapClient;
 import com.dong.serviceorder.remote.ServicePriceClient;
 import com.dong.serviceorder.remote.ServiceSsePushClient;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -64,8 +63,8 @@ public class OrderInfoService {
     /**
      * 新增订单
      *
-     * @param orderDTO
-     * @return
+     * @param orderDTO 订单DTO
+     * @return ResponseResult
      */
     public ResponseResult addOrderInfo(OrderDTO orderDTO) {
         OrderInfo orderInfo = new OrderInfo();
@@ -111,6 +110,7 @@ public class OrderInfoService {
 
 
         // 周边终端搜索【派单】
+        //WYD TODO 2024-02-03: 循环找车，视频里直接使用for循环和线程睡眠  6次，这里自己没做循环找车
         dispatchRealTimeOrder(orderInfo);
 
         return ResponseResult.success();
@@ -274,5 +274,38 @@ public class OrderInfoService {
                 .or().eq(OrderInfo::getOrderStatus, OrderConstant.START_ITINERARY));
         Integer count = orderInfoMapper.selectCount(queryWrapper);
         return count;
+    }
+
+    /**
+     * 司机去接乘客
+     * @param orderDTO
+     * @return
+     */
+    public ResponseResult toPickUpPassenger(OrderDTO orderDTO){
+        Long orderId = orderDTO.getOrderId();
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+
+        orderInfo.setToPickUpPassengerTime(LocalDateTime.now());
+        orderInfo.setToPickUpPassengerAddress(orderDTO.getToPickUpPassengerAddress());
+        orderInfo.setToPickUpPassengerLongitude(orderDTO.getToPickUpPassengerLongitude());
+        orderInfo.setToPickUpPassengerLatitude(orderDTO.getToPickUpPassengerLatitude());
+        orderInfo.setOrderStatus(OrderConstant.ORDER_GOING_PASSENGER);
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 司机到达乘客上车点
+     * @param orderDTO
+     * @return
+     */
+    public ResponseResult driverArrivedDeparture(OrderDTO orderDTO){
+        Long orderId = orderDTO.getOrderId();
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+
+        orderInfo.setDriverArrivedDepartureTime(LocalDateTime.now());
+        orderInfo.setOrderStatus(OrderConstant.DRIVER_ARRIVE_PICK);
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success();
     }
 }
