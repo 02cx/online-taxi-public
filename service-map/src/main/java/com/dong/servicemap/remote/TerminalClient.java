@@ -2,6 +2,7 @@ package com.dong.servicemap.remote;
 
 import com.dong.internalcommon.constant.AmapConfigConstant;
 import com.dong.internalcommon.response.TerminalResponse;
+import com.dong.internalcommon.response.TrsearchResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -113,7 +114,7 @@ public class TerminalClient {
      * @param endtime
      * @return
      */
-    public ResponseResult terminalTrsearch(String tid,Long starttime,Long endtime){
+    public ResponseResult<TrsearchResponse> terminalTrsearch(String tid, Long starttime, Long endtime){
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(AmapConfigConstant.TERMINAL_TRSEARCH);
         urlBuilder.append("?");
@@ -131,6 +132,28 @@ public class TerminalClient {
         ResponseEntity<String> forEntity = restTemplate.getForEntity(urlBuilder.toString(), String.class);
         System.out.println("查询轨迹信息响应信息：" + forEntity.getBody());
 
-        return ResponseResult.success(forEntity.getBody());
+        JSONObject jsonObject = JSONObject.fromObject(forEntity.getBody());
+        JSONObject data = jsonObject.getJSONObject("data");
+        int counts = data.getInt("counts");
+        if(counts == 0){
+            return ResponseResult.fail("轨迹条数为0");
+        }
+
+        Long driveMile = 0L;
+        Long driveTime = 0L;
+        JSONArray tracks = data.getJSONArray("tracks");
+        for (int i = 0; i < tracks.size(); i++) {
+            JSONObject track = tracks.getJSONObject(i);
+            int distance = track.getInt("distance");
+            driveMile += distance;
+
+            int time = track.getInt("time");
+            driveTime += time / (60 * 1000);
+        }
+
+        TrsearchResponse trsearchResponse = new TrsearchResponse();
+        trsearchResponse.setDriveMile(driveMile);
+        trsearchResponse.setDriveTime(driveTime);
+        return ResponseResult.success(trsearchResponse);
     }
 }

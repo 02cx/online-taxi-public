@@ -3,6 +3,7 @@ package com.dong.servicemap.service;
 import com.dong.internalcommon.request.AroundSearchTerminalDTO;
 import com.dong.internalcommon.request.TerminalDTO;
 import com.dong.internalcommon.response.TerminalResponse;
+import com.dong.internalcommon.response.TrsearchResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.servicemap.remote.TerminalClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class TerminalService {
      * @param endtime
      * @return
      */
-    public ResponseResult trsearch(String tid,Long starttime,Long endtime){
+    public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime, Long endtime){
         return terminalClient.terminalTrsearch(tid,starttime,endtime);
     }
 }
