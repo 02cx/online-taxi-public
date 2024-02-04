@@ -2,6 +2,7 @@ package com.dong.serviceprice.controller;
 
 import com.dong.internalcommon.request.CalculatePriceDTO;
 import com.dong.internalcommon.request.ForecastPriceDTO;
+import com.dong.internalcommon.response.PriceResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.serviceprice.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class PriceController {
      * @return
      */
     @PostMapping("/calculate-price")
-    public ResponseResult calculatePrice(@RequestBody CalculatePriceDTO calculatePriceDTO){
+    public ResponseResult<PriceResponse> calculatePrice(@RequestBody CalculatePriceDTO calculatePriceDTO){
         return priceService.calculatePrice(calculatePriceDTO);
     }
 }

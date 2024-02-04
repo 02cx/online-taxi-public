@@ -1,6 +1,8 @@
 package com.dong.serviceorder.remote;
 
+import com.dong.internalcommon.request.CalculatePriceDTO;
 import com.dong.internalcommon.request.PriceRuleDTO;
+import com.dong.internalcommon.response.PriceResponse;
 import com.dong.internalcommon.response.PriceRuleResponse;
 import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -35,5 +37,13 @@ public interface ServicePriceClient {
      */
     @PostMapping("/price-rule/if-exists")
     public ResponseResult<Boolean> ifExists(@RequestBody PriceRuleDTO priceRuleDTO);
+
+    /**
+     * 计算实际价格
+     * @param calculatePriceDTO
+     * @return
+     */
+    @PostMapping("/calculate-price")
+    public ResponseResult<PriceResponse> calculatePrice(@RequestBody CalculatePriceDTO calculatePriceDTO);
 
 }

@@ -73,7 +73,7 @@ public class PriceService {
      * @param calculatePriceDTO
      * @return
      */
-    public ResponseResult calculatePrice(CalculatePriceDTO calculatePriceDTO){
+    public ResponseResult<PriceResponse> calculatePrice(CalculatePriceDTO calculatePriceDTO){
         LambdaQueryWrapper<PriceRule> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PriceRule::getCityCode,calculatePriceDTO.getCityCode());
         wrapper.eq(PriceRule::getVehicleType,calculatePriceDTO.getVehicleType());

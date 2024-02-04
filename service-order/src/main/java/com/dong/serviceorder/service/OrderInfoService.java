@@ -4,14 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dong.internalcommon.constant.CommonStatusEnum;
 import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.constant.OrderConstant;
-import com.dong.internalcommon.request.AroundSearchTerminalDTO;
-import com.dong.internalcommon.request.CarDTO;
-import com.dong.internalcommon.request.OrderDTO;
-import com.dong.internalcommon.request.PriceRuleDTO;
-import com.dong.internalcommon.response.OrderDriverResponse;
-import com.dong.internalcommon.response.PriceRuleResponse;
-import com.dong.internalcommon.response.TerminalResponse;
-import com.dong.internalcommon.response.TrsearchResponse;
+import com.dong.internalcommon.request.*;
+import com.dong.internalcommon.response.*;
 import com.dong.internalcommon.result.ResponseResult;
 import com.dong.internalcommon.util.RedisPrefixUtils;
 import com.dong.serviceorder.domain.OrderInfo;
@@ -220,8 +214,6 @@ public class OrderInfoService {
                     passengerContent.put("vehicleNo",carDTO.getVehicleNo());
                     serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstant.PASSENGER_IDENTITY,passengerContent.toString());
 
-
-
                     // 如果派单成功，则跳出循环
                     orderInfoMapper.updateById(orderInfo);
                     rLock.unlock();
@@ -358,10 +350,20 @@ public class OrderInfoService {
         long endtime = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
 
         ResponseResult<TrsearchResponse> trsearch = serviceMapClient.trsearch(tid, starttime, endtime);
+        Long driveMile = trsearch.getData().getDriveMile();
+        Long driveTime = trsearch.getData().getDriveTime();
+        orderInfo.setDriveMile(driveMile);
+        orderInfo.setDriveTime(driveTime);
 
-        orderInfo.setDriveMile(trsearch.getData().getDriveMile());
-        orderInfo.setDriveTime(trsearch.getData().getDriveTime());
-
+        // 获取实际价格
+        CalculatePriceDTO calculatePriceDTO = new CalculatePriceDTO();
+        calculatePriceDTO.setDistance(driveMile.intValue());
+        calculatePriceDTO.setDuration(driveTime.intValue());
+        calculatePriceDTO.setCityCode(orderInfo.getAddress());
+        calculatePriceDTO.setVehicleType(orderInfo.getVehicleType());
+        ResponseResult<PriceResponse> responseResult = servicePriceClient.calculatePrice(calculatePriceDTO);
+        PriceResponse priceResponse = responseResult.getData();
+        orderInfo.setPrice(priceResponse.getActualPrice());
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success();
     }
