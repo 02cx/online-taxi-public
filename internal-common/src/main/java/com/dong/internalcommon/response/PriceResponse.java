@@ -3,9 +3,11 @@ package com.dong.internalcommon.response;
 import lombok.Data;
 
 @Data
-public class ForecasePriceResponse {
+public class PriceResponse {
 
     private Double forecasePrice;
+
+    private Double actualPrice;
 
     private String cityCode;
 

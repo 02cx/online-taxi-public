@@ -156,6 +156,12 @@ public class OrderInfoService {
                     log.info("车辆Id：" + carId + "找到了正在出车的司机");
                     Long driverId = orderDriverResponse.getDriverId();
 
+                    String driverVehicleType = orderDriverResponse.getVehicleType();
+                    String orderVehicleType = orderInfo.getVehicleType();
+                    if(!driverVehicleType.trim().equals(orderVehicleType.trim())){
+                        System.out.println("匹配的车型和订单车型不同");
+                        continue;
+                    }
 
                     //synchronized (driverId){  // 不能解决并发问题
                     //synchronized ((driverId + "").intern()){  // 能解决并发问题
