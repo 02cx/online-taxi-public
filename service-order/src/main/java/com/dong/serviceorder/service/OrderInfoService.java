@@ -109,8 +109,29 @@ public class OrderInfoService {
 
 
         // 周边终端搜索【派单】
-        //WYD TODO 2024-02-03: 循环找车，视频里直接使用for循环和线程睡眠  6次，这里自己没做循环找车
-        dispatchRealTimeOrder(orderInfo);
+        // 定时任务的处理
+        for (int i = 0; i < 6; i++) {
+            // 派单
+            Integer result = dispatchRealTimeOrder(orderInfo);
+            if(result == 1){
+                break;
+            }
+            if(i == 5){
+                // 订单无效
+                orderInfo.setOrderStatus(OrderConstant.ORDER_INVALID);
+                orderInfoMapper.updateById(orderInfo);
+            }
+
+            // 等待20s
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+
 
         return ResponseResult.success();
     }
@@ -121,9 +142,11 @@ public class OrderInfoService {
      *
      * @param orderInfo
      */
-    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
+    public Integer dispatchRealTimeOrder(OrderInfo orderInfo) {
         AroundSearchTerminalDTO aroundSearchTerminalDTO = new AroundSearchTerminalDTO();
         aroundSearchTerminalDTO.setCenter(orderInfo.getDepLatitude() + "," + orderInfo.getDepLongitude());
+
+        Integer result = 0;
 
         ArrayList<Integer> radiusList = new ArrayList<>();
         radiusList.add(2000);
@@ -216,16 +239,18 @@ public class OrderInfoService {
                     passengerContent.put("model", carDTO.getModel());
                     passengerContent.put("vehicleNo", carDTO.getVehicleNo());
                     serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstant.PASSENGER_IDENTITY, passengerContent.toString());
-
+                    result = 1;
                     // 如果派单成功，则跳出循环
                     orderInfoMapper.updateById(orderInfo);
                     rLock.unlock();
                     flag = false;
                 }
+
             }
 
 
         }
+        return  result;
     }
 
 
