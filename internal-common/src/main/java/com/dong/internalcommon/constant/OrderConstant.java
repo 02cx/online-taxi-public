@@ -27,4 +27,20 @@ public class OrderConstant {
     public static final String INIT_ORDER_COUNT = "1";
     // 黑名单设备号有效时间
     public static final Integer BLACK_DEVICE_TIME = 1;
+
+
+    /**
+     * 撤销类型代码
+     * 1:乘客提前撤销
+     * 2:驾驶员提前撤销
+     * 3:平台公司撤销
+     * 4;乘客违约撤销
+     * 5:驾驶员违约撤销
+     */
+    public static final Integer CANCEL_PASSENGER_BEFORE = 1;
+    public static final Integer CANCEL_DRIVER_BEFORE = 2;
+    public static final Integer CANCEL_PLATFORM = 3;
+    public static final Integer CANCEL_PASSENGER_DEFAULT = 4;
+    public static final Integer CANCEL_DRIVER_DEFAULT = 5;
+
 }

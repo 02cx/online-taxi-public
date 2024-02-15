@@ -16,6 +16,7 @@ import com.dong.serviceorder.remote.ServicePriceClient;
 import com.dong.serviceorder.remote.ServiceSsePushClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.apache.tomcat.jni.Local;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
@@ -24,9 +25,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -152,7 +155,7 @@ public class OrderInfoService {
 
                     String driverVehicleType = orderDriverResponse.getVehicleType();
                     String orderVehicleType = orderInfo.getVehicleType();
-                    if(!driverVehicleType.trim().equals(orderVehicleType.trim())){
+                    if (!driverVehicleType.trim().equals(orderVehicleType.trim())) {
                         System.out.println("匹配的车型和订单车型不同");
                         continue;
                     }
@@ -161,7 +164,7 @@ public class OrderInfoService {
                     //synchronized ((driverId + "").intern()){  // 能解决并发问题
                     String lock = (driverId + "").intern();
                     RLock rLock = redissonClient.getLock(lock);
-                    rLock.lock(30,TimeUnit.SECONDS);
+                    rLock.lock(30, TimeUnit.SECONDS);
 
                     // 查询司机是否有正在进行的订单
                     if (driverOrderOnGoing(driverId) > 0) {
@@ -186,33 +189,33 @@ public class OrderInfoService {
 
                     // 推送消息给司机
                     JSONObject driverContent = new JSONObject();
-                    driverContent.put("passengerId",orderInfo.getPassengerId());
-                    driverContent.put("passengerPhone",orderInfo.getPassengerPhone());
+                    driverContent.put("passengerId", orderInfo.getPassengerId());
+                    driverContent.put("passengerPhone", orderInfo.getPassengerPhone());
                     // 乘客出发地
-                    driverContent.put("departure",orderInfo.getDeparture());
-                    driverContent.put("depLongitude",orderInfo.getDepLongitude());
-                    driverContent.put("depLatitude",orderInfo.getDepLatitude());
+                    driverContent.put("departure", orderInfo.getDeparture());
+                    driverContent.put("depLongitude", orderInfo.getDepLongitude());
+                    driverContent.put("depLatitude", orderInfo.getDepLatitude());
                     // 乘客目的地
-                    driverContent.put("destination",orderInfo.getDestination());
-                    driverContent.put("destLongitude",orderInfo.getDestLongitude());
-                    driverContent.put("destLatitude",orderInfo.getDestLatitude());
+                    driverContent.put("destination", orderInfo.getDestination());
+                    driverContent.put("destLongitude", orderInfo.getDestLongitude());
+                    driverContent.put("destLatitude", orderInfo.getDestLatitude());
 
-                    serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY,driverContent.toString());
+                    serviceSsePushClient.push(driverId, IdentityConstant.DRIVER_IDENTITY, driverContent.toString());
 
                     // 推送消息给乘客
                     JSONObject passengerContent = new JSONObject();
-                    passengerContent.put("driverId",orderInfo.getDriverId());
-                    passengerContent.put("driverPhone",orderInfo.getDriverPhone());
+                    passengerContent.put("driverId", orderInfo.getDriverId());
+                    passengerContent.put("driverPhone", orderInfo.getDriverPhone());
                     // 司机出发地
-                    passengerContent.put("receiveOrderCarLongitude",orderInfo.getReceiveOrderCarLongitude());
-                    passengerContent.put("receiveOrderCarLatitude",orderInfo.getReceiveOrderCarLatitude());
+                    passengerContent.put("receiveOrderCarLongitude", orderInfo.getReceiveOrderCarLongitude());
+                    passengerContent.put("receiveOrderCarLatitude", orderInfo.getReceiveOrderCarLatitude());
                     // 车辆信息
                     ResponseResult<CarDTO> carById = serviceDriverUserClient.getCarById(carId);
                     CarDTO carDTO = carById.getData();
-                    passengerContent.put("brand",carDTO.getBrand());
-                    passengerContent.put("model",carDTO.getModel());
-                    passengerContent.put("vehicleNo",carDTO.getVehicleNo());
-                    serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstant.PASSENGER_IDENTITY,passengerContent.toString());
+                    passengerContent.put("brand", carDTO.getBrand());
+                    passengerContent.put("model", carDTO.getModel());
+                    passengerContent.put("vehicleNo", carDTO.getVehicleNo());
+                    serviceSsePushClient.push(orderInfo.getPassengerId(), IdentityConstant.PASSENGER_IDENTITY, passengerContent.toString());
 
                     // 如果派单成功，则跳出循环
                     orderInfoMapper.updateById(orderInfo);
@@ -278,10 +281,11 @@ public class OrderInfoService {
 
     /**
      * 司机去接乘客
+     *
      * @param orderDTO
      * @return
      */
-    public ResponseResult toPickUpPassenger(OrderDTO orderDTO){
+    public ResponseResult toPickUpPassenger(OrderDTO orderDTO) {
         Long orderId = orderDTO.getOrderId();
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
 
@@ -296,10 +300,11 @@ public class OrderInfoService {
 
     /**
      * 司机到达乘客上车点
+     *
      * @param orderDTO
      * @return
      */
-    public ResponseResult driverArrivedDeparture(OrderDTO orderDTO){
+    public ResponseResult driverArrivedDeparture(OrderDTO orderDTO) {
         Long orderId = orderDTO.getOrderId();
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
 
@@ -311,10 +316,11 @@ public class OrderInfoService {
 
     /**
      * 乘客上车
+     *
      * @param orderDTO
      * @return
      */
-    public ResponseResult pickUpPassenger(OrderDTO orderDTO){
+    public ResponseResult pickUpPassenger(OrderDTO orderDTO) {
         OrderInfo orderInfo = orderInfoMapper.selectById(orderDTO.getOrderId());
 
         orderInfo.setPickUpPassengerTime(LocalDateTime.now());
@@ -328,11 +334,11 @@ public class OrderInfoService {
 
     /**
      * 乘客到达目的地，下车
+     *
      * @param orderDTO
      * @return
      */
-    @PostMapping("/passenger-getoff")
-    public ResponseResult passengerGetoff(@RequestBody OrderDTO orderDTO){
+    public ResponseResult passengerGetoff(OrderDTO orderDTO) {
         OrderInfo orderInfo = orderInfoMapper.selectById(orderDTO.getOrderId());
 
         orderInfo.setPassengerGetoffTime(LocalDateTime.now());
@@ -365,6 +371,82 @@ public class OrderInfoService {
         PriceResponse priceResponse = responseResult.getData();
         orderInfo.setPrice(priceResponse.getActualPrice());
         orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 支付成功
+     *
+     * @param orderDTO
+     * @return
+     */
+    public ResponseResult pay(OrderDTO orderDTO) {
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderDTO.getOrderId());
+
+        orderInfo.setOrderStatus(OrderConstant.PAY_COMPLETED);
+        orderInfoMapper.updateById(orderInfo);
+
+        return ResponseResult.success();
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param orderId  订单id
+     * @param identity 用户身份 乘客1  司机2
+     * @return
+     */
+    public ResponseResult cancel(Long orderId, String identity) {
+        // 获取订单状态
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        Integer orderStatus = orderInfo.getOrderStatus();
+
+        LocalDateTime cancelTime = LocalDateTime.now();
+        Integer cancelTypeCode = null;
+        Integer cancelOperator = null;
+        // 乘客取消
+        LocalDateTime receiveOrderTime = orderInfo.getReceiveOrderTime();
+        if (identity.trim().equals(IdentityConstant.PASSENGER_IDENTITY)) {
+            if (OrderConstant.ORDER_START.equals(orderStatus)) {
+                cancelTypeCode = OrderConstant.CANCEL_PASSENGER_BEFORE;
+            } else if (orderStatus.equals(OrderConstant.DRIVER_TAKE_ORDER)) {
+                long between = ChronoUnit.MINUTES.between(receiveOrderTime, cancelTime);
+                if (between < 1) {
+                    cancelTypeCode = OrderConstant.CANCEL_PASSENGER_BEFORE;
+                } else {
+                    cancelTypeCode = OrderConstant.CANCEL_PASSENGER_DEFAULT;
+                }
+            } else if (orderStatus.equals(OrderConstant.ORDER_GOING_PASSENGER) || orderStatus.equals(OrderConstant.DRIVER_ARRIVE_PICK)) {
+                cancelTypeCode = OrderConstant.CANCEL_PASSENGER_DEFAULT;
+            } else {
+                return ResponseResult.fail(CommonStatusEnum.ORDER_NOT_CANCEL);
+            }
+            cancelOperator = Integer.parseInt(IdentityConstant.PASSENGER_IDENTITY);
+        }
+        // 司机取消
+        if (identity.trim().equals(IdentityConstant.DRIVER_IDENTITY)) {
+            if (orderStatus.equals(OrderConstant.DRIVER_TAKE_ORDER)
+                    || orderStatus.equals(OrderConstant.ORDER_GOING_PASSENGER)
+                    || orderStatus.equals(OrderConstant.DRIVER_ARRIVE_PICK)) {
+                long between = ChronoUnit.MINUTES.between(receiveOrderTime, cancelTime);
+                if (between < 1) {
+                    cancelTypeCode = OrderConstant.CANCEL_DRIVER_BEFORE;
+                } else {
+                    cancelTypeCode = OrderConstant.CANCEL_DRIVER_DEFAULT;
+                }
+            } else {
+                return ResponseResult.fail(CommonStatusEnum.ORDER_NOT_CANCEL);
+            }
+            cancelOperator = Integer.parseInt(IdentityConstant.DRIVER_IDENTITY);
+        }
+
+        orderInfo.setCancelTime(cancelTime);
+        orderInfo.setCancelOperator(cancelOperator);
+        orderInfo.setCancelTypeCode(cancelTypeCode);
+        orderInfo.setOrderStatus(OrderConstant.ORDER_CANCEL);
+
+        orderInfoMapper.updateById(orderInfo);
+
         return ResponseResult.success();
     }
 }

@@ -7,7 +7,9 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.dong.internalcommon.request.OrderDTO;
 import com.dong.servicealipay.config.MyAlipayConfig;
+import com.dong.servicealipay.remote.ServiceOrderClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,9 @@ public class AlipayController {
 
     @Autowired
     private MyAlipayConfig aliPayConfig;
+
+    @Autowired
+    private ServiceOrderClient serviceOrderClient;
 
     /**
      * 支付接口
@@ -105,6 +110,10 @@ public class AlipayController {
 
                 // 更新订单未已支付
                 // ordersMapper.updateState(tradeNo, "已支付", gmtPayment, alipayTradeNo);
+                String outTradeNo = params.get("out_trade_no");
+                OrderDTO orderDTO = new OrderDTO();
+                orderDTO.setOrderId(Long.parseLong(outTradeNo));
+                serviceOrderClient.pay(orderDTO);
             }
         }
         return "success";

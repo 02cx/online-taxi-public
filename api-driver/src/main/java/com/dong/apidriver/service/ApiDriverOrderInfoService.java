@@ -1,12 +1,14 @@
 package com.dong.apidriver.service;
 
 import com.dong.apidriver.remote.ServiceOrderClient;
+import com.dong.internalcommon.constant.IdentityConstant;
 import com.dong.internalcommon.request.OrderDTO;
 import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class ApiDriverOrderInfoService {
@@ -53,5 +55,14 @@ public class ApiDriverOrderInfoService {
      */
     public ResponseResult passengerGetoff(OrderDTO orderDTO) {
         return serviceOrderClient.passengerGetoff(orderDTO);
+    }
+
+    /**
+     * 司机取消订单
+     * @param orderId 订单id
+     * @return
+     */
+    public ResponseResult cancel( Long orderId){
+        return serviceOrderClient.cancel(orderId, IdentityConstant.DRIVER_IDENTITY);
     }
 }

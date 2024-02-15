@@ -4,10 +4,7 @@ import com.dong.apidriver.service.ApiDriverOrderInfoService;
 import com.dong.internalcommon.request.OrderDTO;
 import com.dong.internalcommon.result.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -53,5 +50,15 @@ public class OrderController {
     @PostMapping("/passenger-getoff")
     public ResponseResult passengerGetoff(@RequestBody OrderDTO orderDTO){
         return apiDriverOrderInfoService.passengerGetoff(orderDTO);
+    }
+
+    /**
+     * 取消订单
+     * @param orderId 订单id
+     * @return
+     */
+    @PostMapping("/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId){
+        return apiDriverOrderInfoService.cancel(orderId);
     }
 }

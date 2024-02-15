@@ -51,6 +51,7 @@ public enum CommonStatusEnum {
     ORDER_GOING_ON(1600,"有正在进行的订单"),
     DEVICE_INVALID(1601,"用户设备号超出下单限制次数"),
     CITY_SERVICE_NOT_EXISTS(1602,"该城市或车辆类型服务未开通"),
+    ORDER_NOT_CANCEL(1603,"当前订单状态不能取消"),
 
 
     /**

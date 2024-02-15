@@ -5,10 +5,7 @@ import com.dong.internalcommon.result.ResponseResult;
 import com.dong.serviceorder.service.OrderInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -67,6 +64,27 @@ public class OrderInfoController {
     @PostMapping("/passenger-getoff")
     public ResponseResult passengerGetoff(@RequestBody OrderDTO orderDTO){
         return orderInfoService.passengerGetoff(orderDTO);
+    }
+
+    /**
+     * 支付成功
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/pay")
+    public ResponseResult pay(@RequestBody OrderDTO orderDTO){
+        return orderInfoService.pay(orderDTO);
+    }
+
+    /**
+     * 取消订单
+     * @param orderId 订单id
+     * @param identity 用户身份 乘客1  司机2
+     * @return
+     */
+    @PostMapping("/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId,@RequestParam String identity){
+        return orderInfoService.cancel(orderId,identity);
     }
 
 }
